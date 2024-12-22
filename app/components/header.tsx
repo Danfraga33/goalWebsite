@@ -29,13 +29,15 @@ const Header = () => {
             Pricing
           </Link>
         </nav>
-        <ModeToggle />
-        <Link
-          to="/dashboard"
-          className="rounded-md bg-primary px-4 py-2 text-white transition-colors hover:bg-primary/90 dark:text-black"
-        >
-          Get Started
-        </Link>
+        <div className="flex items-center justify-center gap-2">
+          <ModeToggle />
+          <Link
+            to="/dashboard"
+            className="rounded-md bg-primary px-4 py-2 text-white transition-colors hover:bg-primary/90 dark:text-black"
+          >
+            Get Started
+          </Link>
+        </div>
       </div>
     </header>
   );
