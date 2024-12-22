@@ -48,7 +48,6 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   };
   const parentLocation = findParentNav(location.pathname);
   const childLocation = refactorLocation(location.pathname);
-  console.log(findParentNav(location.pathname));
 
   return (
     <SidebarProvider>
