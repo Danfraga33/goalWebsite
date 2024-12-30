@@ -27,7 +27,7 @@ export default function NavUser() {
 
   return (
     <>
-      <SidebarMenu>
+      <SidebarMenu className="shadow-lg dark:shadow-inherit">
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
