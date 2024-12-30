@@ -12,7 +12,6 @@ import {
 import { Separator } from "./ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "./ui/sidebar";
 import { ReactNode } from "react";
-import NavUser from "./navUser";
 import { NavData } from "~/lib/data/nav";
 
 const Sidebar = ({ children }: { children: ReactNode }) => {
@@ -48,7 +47,6 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   };
   const parentLocation = findParentNav(location.pathname);
   const childLocation = refactorLocation(location.pathname);
-
   return (
     <SidebarProvider>
       <AppSidebar />
