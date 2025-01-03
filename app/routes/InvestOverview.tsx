@@ -1,12 +1,25 @@
-import React from "react";
-import PageTitle from "~/components/pageTitle";
+import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
+import Evernote from "~/components/Evernote";
+import Savings from "~/components/Savings";
+import Investments from "~/components/Investments";
+import NetWorth from "~/components/NetWorth";
+import NetWorthTrendLine from "~/components/NetWorthTrendLine";
 
 const InvestOverview = () => {
   return (
     <Sidebar>
-      <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
-        <PageTitle>Invest Overview</PageTitle>
+      <div className="flex flex-col gap-8 p-4">
+        <PageTitle>Investment Overview</PageTitle>
+        {/* 
+        <Savings />
+
+        <Investments />
+
+        <NetWorth />
+
+        <NetWorthTrendLine /> */}
+        <Evernote />
       </div>
     </Sidebar>
   );
