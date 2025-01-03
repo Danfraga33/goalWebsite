@@ -2,8 +2,26 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "./ui/badge";
+import { useLoaderData, useLocation } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { data } from "@remix-run/node";
+import { ScrollArea } from "./ui/scroll-area";
+import { Notes } from "~/lib/constants/Notes";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog";
+import { db } from "~/lib/db/db";
+
 interface Note {
   id: string;
   title: string;
@@ -11,18 +29,21 @@ interface Note {
   createdAt: Date;
 }
 
-const Evernote = () => {
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: "1",
-      title: "Welcome Note",
-      content:
-        "Welcome to your SaaS Planner! Use this space to jot down ideas, plans, and important information about your projects.",
-      createdAt: new Date(),
-    },
-  ]);
+export async function loader() {
+  const response = await db.user.findMany();
+  return response;
+}
+
+const Evernote = ({ loaderData }: any) => {
+  const [notes, setNotes] = useState<Note[]>(Notes);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
+
+  const data = useLoaderData();
+  console.log(data);
 
   const handleNewNote = () => {
     const newNote: Note = {
@@ -31,8 +52,10 @@ const Evernote = () => {
       content: "",
       createdAt: new Date(),
     };
+
     setNotes([newNote, ...notes]);
     setSelectedNote(newNote);
+    setIsEditing(true);
   };
 
   const handleNoteChange = (field: "title" | "content", value: string) => {
@@ -44,16 +67,45 @@ const Evernote = () => {
       );
     }
   };
+
+  const handleDeleteNote = (note: Note) => {
+    setNoteToDelete(note);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (noteToDelete) {
+      setNotes(notes.filter((note) => note.id !== noteToDelete.id));
+      if (selectedNote && selectedNote.id === noteToDelete.id) {
+        setSelectedNote(null);
+      }
+    }
+    setDeleteDialogOpen(false);
+  };
+
   const filteredNotes = notes.filter(
     (note) =>
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  const location = useLocation();
+  const normalizeUrl = (url: string) => {
+    return url.replace(/^\//, "");
+  };
+  const pageCategory = normalizeUrl(location.pathname);
+
   return (
-    <Card className="flex h-[600px] overflow-hidden">
+    <Card className="flex overflow-hidden">
       <div className="w-1/3 border-r border-gray-200 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Notes</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold">Notes</h3>
+            <span>
+              <Badge>{pageCategory}</Badge>
+            </span>
+          </div>
+
           <Button size="sm" onClick={handleNewNote}>
             <PlusCircle className="mr-2 h-4 w-4" />
             New Note
@@ -71,25 +123,38 @@ const Evernote = () => {
             />
           </div>
         </div>
-        <div className="space-y-2">
+        <ScrollArea className="h-[80%] space-y-2 rounded-md border">
           {filteredNotes.map((note) => (
             <div
               key={note.id}
-              className={`cursor-pointer rounded-md p-2 ${
+              className={`flex items-center justify-between rounded-md p-2 ${
                 selectedNote?.id === note.id
                   ? "bg-primary text-primary-foreground"
                   : "hover:bg-gray-100"
               }`}
-              onClick={() => setSelectedNote(note)}
             >
-              <h4 className="font-medium">{note.title}</h4>
-              <p className="text-sm text-gray-500">
-                {note.content.slice(0, 50)}
-                {note.content.length > 50 ? "..." : ""}
-              </p>
+              <div
+                className="flex-grow cursor-pointer"
+                onClick={() => setSelectedNote(note)}
+              >
+                <h4 className="font-medium">{note.title}</h4>
+                <p className="text-sm text-gray-500">
+                  {note.content.slice(0, 50)}
+                  {note.content.length > 50 ? "..." : ""}
+                </p>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => handleDeleteNote(note)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ))}
-        </div>
+        </ScrollArea>
       </div>
       <div className="flex-1 p-4">
         {selectedNote ? (
@@ -98,12 +163,14 @@ const Evernote = () => {
               value={selectedNote.title}
               onChange={(e) => handleNoteChange("title", e.target.value)}
               className="mb-4 text-xl font-bold"
+              readOnly={!isEditing}
             />
             <Textarea
               value={selectedNote.content}
               onChange={(e) => handleNoteChange("content", e.target.value)}
               className="h-full min-h-[400px] resize-none"
               placeholder="Start typing your note here..."
+              readOnly={!isEditing}
             />
           </>
         ) : (
@@ -112,6 +179,23 @@ const Evernote = () => {
           </div>
         )}
       </div>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              note.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };
