@@ -1,4 +1,4 @@
-export const CurrentOppucation = {
-  TITLE: "Software Developer",
-  INCOME: 123456,
+export const CurrentOccupation = {
+  Title: "Software Developer",
+  Income: 123456,
 };

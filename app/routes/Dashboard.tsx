@@ -3,7 +3,7 @@ import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
 
-export default function Page() {
+export default function Dashboard() {
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">

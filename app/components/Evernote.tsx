@@ -6,8 +6,6 @@ import { PlusCircle, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
 import { useLoaderData, useLocation } from "@remix-run/react";
-import { json } from "@remix-run/node";
-import { data } from "@remix-run/node";
 import { ScrollArea } from "./ui/scroll-area";
 import { Notes } from "~/lib/constants/Notes";
 import {
@@ -20,30 +18,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { db } from "~/lib/db/db";
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-}
+import { Note } from "~/lib/types/types";
 
 export async function loader() {
-  const response = await db.user.findMany();
-  return response;
+  const users = {
+    name: "John",
+  };
+  console.log({ users });
+  return users;
 }
 
-const Evernote = ({ loaderData }: any) => {
+const Evernote = () => {
+  const response = useLoaderData<typeof loader>();
+  console.log(response);
   const [notes, setNotes] = useState<Note[]>(Notes);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
-
-  const data = useLoaderData();
-  console.log(data);
 
   const handleNewNote = () => {
     const newNote: Note = {
