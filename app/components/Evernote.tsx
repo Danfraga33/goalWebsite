@@ -5,7 +5,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { PlusCircle, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
-import { useLoaderData, useLocation } from "@remix-run/react";
+import { Form, useLocation } from "@remix-run/react";
 import { ScrollArea } from "./ui/scroll-area";
 import { Notes } from "~/lib/constants/Notes";
 import {
@@ -19,18 +19,12 @@ import {
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
-
-export async function loader() {
-  const users = {
-    name: "John",
-  };
-  console.log({ users });
-  return users;
-}
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Label } from "./ui/label";
+import { ActionFunctionArgs } from "@remix-run/node";
+import AddNote from "./AddNote";
 
 const Evernote = () => {
-  const response = useLoaderData<typeof loader>();
-  console.log(response);
   const [notes, setNotes] = useState<Note[]>(Notes);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,10 +93,7 @@ const Evernote = () => {
             </span>
           </div>
 
-          <Button size="sm" onClick={handleNewNote}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Note
-          </Button>
+          <AddNote />
         </div>
         <div className="mb-4">
           <div className="relative">
