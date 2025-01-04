@@ -66,7 +66,7 @@ const AddStock = () => {
   };
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button>Add New Stock</Button>
       </DialogTrigger>
       <DialogContent>
