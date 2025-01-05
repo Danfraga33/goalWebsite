@@ -6,7 +6,8 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev",
-    "generate": "prisma generate",
+    "db": "prisma db push & prisma generate",
+    "studio": "prisma studio",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
@@ -42,6 +43,7 @@
     "recharts": "^2.15.0",
     "remix-theme": "^0.0.4",
     "remix-themes": "^1.5.1",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
