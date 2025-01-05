@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, useLocation } from "@remix-run/react";
 import { PlusCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -10,6 +10,11 @@ import {
 } from "~/components/ui/popover";
 
 const AddNote = () => {
+  const location = useLocation();
+  const normalizeUrl = (url: string) => {
+    return url.replace(/^\//, "");
+  };
+  const pageCategory = normalizeUrl(location.pathname);
   return (
     <Popover>
       <PopoverTrigger className="flex items-center" asChild>
@@ -24,7 +29,7 @@ const AddNote = () => {
             <h4 className="font-medium leading-none">New Note</h4>
             <p className="text-sm text-muted-foreground">Create a new note</p>
           </div>
-          <Form method="post" action="/Dashboard">
+          <Form method="post" action={`/${pageCategory}`}>
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="title">Title</Label>
