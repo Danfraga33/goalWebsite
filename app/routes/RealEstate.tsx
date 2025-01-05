@@ -1,64 +1,6 @@
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { Badge } from "~/components/ui/badge";
 import Evernote from "~/components/Evernote";
-import CapitalGrowth from "~/components/CapitalGrowth";
-
-interface Property {
-  id: string;
-  address: string;
-  type: string;
-  price: string;
-  rentalIncome: string;
-  capRate: string;
-  cashOnCash: string;
-  description: string;
-}
-
-const watchlistProperties: Property[] = [
-  {
-    id: "1",
-    address: "123 Main St, Anytown, USA",
-    type: "Single Family Home",
-    price: "$350,000",
-    rentalIncome: "$2,500/month",
-    capRate: "8.5%",
-    cashOnCash: "12%",
-    description:
-      "Charming 3-bedroom, 2-bathroom home in a desirable neighborhood. Recently renovated kitchen and bathrooms. Large backyard with potential for additional unit.",
-  },
-  {
-    id: "2",
-    address: "456 Oak Ave, Metropolis, USA",
-    type: "Multi-Family (4 units)",
-    price: "$750,000",
-    rentalIncome: "$6,000/month",
-    capRate: "9.6%",
-    cashOnCash: "14%",
-    description:
-      "Well-maintained 4-unit property in growing area. Each unit is 2-bed, 1-bath. Consistent rental history with long-term tenants. New roof and HVAC systems.",
-  },
-  {
-    id: "3",
-    address: "789 Pine Rd, Lakeside, USA",
-    type: "Vacation Rental",
-    price: "$500,000",
-    rentalIncome: "$4,000/month (average)",
-    capRate: "7.2%",
-    cashOnCash: "10%",
-    description:
-      "Stunning lakefront property with 4 bedrooms and 3 bathrooms. Popular vacation destination with strong seasonal rental demand. Includes dock and boat slip.",
-  },
-];
 
 const capitalGrowthData = [
   { year: 2018, value: 1000000 },
@@ -69,7 +11,42 @@ const capitalGrowthData = [
   { year: 2023, value: 1550000 },
 ];
 
+import { db } from "~/lib/db/db";
+import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
+import { useLoaderData } from "@remix-run/react";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  console.log(formData);
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return null;
+}
+
 const RealEstate = () => {
+  const { notes } = useLoaderData<typeof loader>();
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
@@ -154,7 +131,7 @@ const RealEstate = () => {
                 />
               </section> */}
         </div>
-        <Evernote />
+        <Evernote notesData={notes} />
       </div>
     </Sidebar>
   );
