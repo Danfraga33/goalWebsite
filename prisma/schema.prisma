@@ -14,6 +14,7 @@ datasource db {
 
 }
 enum NoteCategory {
+  Dashboard
   Education
   SaaS
   Savings

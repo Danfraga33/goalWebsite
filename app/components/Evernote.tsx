@@ -2,12 +2,11 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { PlusCircle, Search, Trash2 } from "lucide-react";
+import { Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
-import { Form, useLocation } from "@remix-run/react";
+import { useLocation } from "@remix-run/react";
 import { ScrollArea } from "./ui/scroll-area";
-import { Notes } from "~/lib/constants/Notes";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,13 +18,10 @@ import {
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Label } from "./ui/label";
-import { ActionFunctionArgs } from "@remix-run/node";
 import AddNote from "./AddNote";
 
-const Evernote = () => {
-  const [notes, setNotes] = useState<Note[]>(Notes);
+const Evernote = ({ notesData }: { notesData: any[] }) => {
+  const [notes, setNotes] = useState<Note[]>(notesData);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -70,7 +66,7 @@ const Evernote = () => {
     setDeleteDialogOpen(false);
   };
 
-  const filteredNotes = notes.filter(
+  const filteredNotes = notesData.filter(
     (note) =>
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -81,6 +77,7 @@ const Evernote = () => {
     return url.replace(/^\//, "");
   };
   const pageCategory = normalizeUrl(location.pathname);
+  console.log(pageCategory);
 
   return (
     <Card className="flex overflow-hidden">
@@ -108,36 +105,40 @@ const Evernote = () => {
           </div>
         </div>
         <ScrollArea className="h-[80%] space-y-2 rounded-md border">
-          {filteredNotes.map((note) => (
-            <div
-              key={note.id}
-              className={`flex items-center justify-between rounded-md p-2 ${
-                selectedNote?.id === note.id
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-gray-100"
-              }`}
-            >
+          {filteredNotes.length > 0 ? (
+            filteredNotes.map((note) => (
               <div
-                className="flex-grow cursor-pointer"
-                onClick={() => setSelectedNote(note)}
+                key={note.id}
+                className={`flex items-center justify-between rounded-md p-2 ${
+                  selectedNote?.id === note.id
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-gray-100"
+                }`}
               >
-                <h4 className="font-medium">{note.title}</h4>
-                <p className="text-sm text-gray-500">
-                  {note.content.slice(0, 50)}
-                  {note.content.length > 50 ? "..." : ""}
-                </p>
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleDeleteNote(note)}
+                <div
+                  className="flex-grow cursor-pointer"
+                  onClick={() => setSelectedNote(note)}
                 >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                  <h4 className="font-medium">{note.title}</h4>
+                  <p className="text-sm text-gray-500">
+                    {note.content.slice(0, 50)}
+                    {note.content.length > 50 ? "..." : ""}
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleDeleteNote(note)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Add a note...</p>
+          )}
         </ScrollArea>
       </div>
       <div className="flex-1 p-4">

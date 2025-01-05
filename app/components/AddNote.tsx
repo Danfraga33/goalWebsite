@@ -12,9 +12,11 @@ import {
 const AddNote = () => {
   return (
     <Popover>
-      <PopoverTrigger>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        New Note
+      <PopoverTrigger className="flex items-center" asChild>
+        <Button>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          New Note
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="grid gap-4">
@@ -22,7 +24,7 @@ const AddNote = () => {
             <h4 className="font-medium leading-none">New Note</h4>
             <p className="text-sm text-muted-foreground">Create a new note</p>
           </div>
-          <Form method="post" action="/dashboard">
+          <Form method="post" action="/Dashboard">
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="title">Title</Label>
