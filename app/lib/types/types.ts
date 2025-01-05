@@ -5,6 +5,25 @@ export interface Note {
   createdAt: Date;
 }
 
+export interface Client {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+}
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
+export interface SaaSProject {
+  id: string;
+  title: string;
+  description: string;
+  status: "Planning" | "In Progress" | "Completed";
+}
+
 export enum NoteCategory {
   Dashboard = "Dashboard",
   Education = "Education",
