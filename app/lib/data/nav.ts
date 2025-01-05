@@ -17,7 +17,7 @@ export const NavData = {
       url: "/IncomeOverview",
       items: [
         {
-          title: "Savings Account",
+          title: "Savings Accounts",
           url: "/SavingsAccount",
           isActive: false,
         },
@@ -38,7 +38,7 @@ export const NavData = {
         },
         {
           title: "E-commerce",
-          url: "/Ecommerce",
+          url: "/ECommerce",
           isActive: false,
         },
         {
