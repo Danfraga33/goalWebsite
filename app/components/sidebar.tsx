@@ -23,7 +23,7 @@ const Sidebar = ({ children }: { children: ReactNode }) => {
   }
 
   const normalizeUrl = (url: string) => {
-    return url.replace(/\/$/, ""); // Remove trailing slash if present
+    return url.replace(/\/$/, "");
   };
 
   const findParentNav = (selectedUrl: string) => {
