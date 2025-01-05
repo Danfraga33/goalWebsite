@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Sidebar from "~/components/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -23,6 +22,39 @@ import {
 } from "recharts";
 import PageTitle from "~/components/PageTitle";
 import Evernote from "~/components/Evernote";
+import { useLoaderData } from "@remix-run/react";
+import { db } from "~/lib/db/db";
+import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  console.log(formData);
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return null;
+}
 
 // Sample data for the income table
 const incomeData = [
@@ -36,20 +68,21 @@ const incomeData = [
 
 // Sample data for the line chart
 const monthlyIncomeData = [
-{ month: "Jan", income: 25000 },
-{ month: "Feb", income: 27000 },
-{ month: "Mar", income: 28500 },
-{ month: "Apr", income: 26000 },
-{ month: "May", income: 29000 },
-{ month: "Jun", income: 31000 },
+  { month: "Jan", income: 25000 },
+  { month: "Feb", income: 27000 },
+  { month: "Mar", income: 28500 },
+  { month: "Apr", income: 26000 },
+  { month: "May", income: 29000 },
+  { month: "Jun", income: 31000 },
 ];
 
 const InvestOverview = () => {
   const totalIncome = incomeData.reduce((sum, item) => sum + item.amount, 0);
+  const { notes } = useLoaderData<typeof loader>();
 
   return (
     <Sidebar>
-      <div className="flex flex-col gap-8 p-4">
+      <div className="flex flex-col gap-4 p-4">
         <PageTitle>Income Overview</PageTitle>
         <Card>
           <CardHeader>
@@ -107,7 +140,7 @@ const InvestOverview = () => {
           </CardContent>
         </Card>
         <section>
-          <Evernote />
+          <Evernote notesData={notes} />
         </section>
       </div>
     </Sidebar>

@@ -1,93 +1,76 @@
-import React, { useState } from "react";
+import { NoteCategory } from "@prisma/client";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import Evernote from "~/components/Evernote";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
+import { clientsData } from "~/lib/data/clients";
+import { productsData } from "~/lib/data/products";
+import { db } from "~/lib/db/db";
+import { Client, Product } from "~/lib/types/types";
+import { getPageCategory } from "~/utils/pageUtils";
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
 }
 
-interface Client {
-  id: string;
-  name: string;
-  company: string;
-  email: string;
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  console.log(formData);
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return null;
 }
 
 const Agency = () => {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: "1",
-      name: "Web Design",
-      description: "Custom website design services",
-      price: 2500,
-    },
-    {
-      id: "2",
-      name: "SEO Package",
-      description: "Comprehensive SEO optimization",
-      price: 1500,
-    },
-  ]);
+  const { notes } = useLoaderData<typeof loader>();
+  // const [products, setProducts] = useState<Product[]>(productsData);
+  // const [clients, setClients] = useState<Client[]>(clientsData);
+  // const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
+  //   name: "",
+  //   description: "",
+  //   price: 0,
+  // });
 
-  const [clients, setClients] = useState<Client[]>([
-    {
-      id: "1",
-      name: "John Doe",
-      company: "Tech Innovators",
-      email: "john@techinnovators.com",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      company: "Creative Solutions",
-      email: "jane@creativesolutions.com",
-    },
-  ]);
+  // const [newClient, setNewClient] = useState<Omit<Client, "id">>({
+  //   name: "",
+  //   company: "",
+  //   email: "",
+  // });
 
-  const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
-    name: "",
-    description: "",
-    price: 0,
-  });
+  // const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+  // const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
 
-  const [newClient, setNewClient] = useState<Omit<Client, "id">>({
-    name: "",
-    company: "",
-    email: "",
-  });
+  // const handleAddProduct = () => {
+  //   const id = (products.length + 1).toString();
+  //   setProducts([...products, { ...newProduct, id }]);
+  //   setNewProduct({ name: "", description: "", price: 0 });
+  //   setIsProductDialogOpen(false);
+  // };
 
-  const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
-  const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
-
-  const handleAddProduct = () => {
-    const id = (products.length + 1).toString();
-    setProducts([...products, { ...newProduct, id }]);
-    setNewProduct({ name: "", description: "", price: 0 });
-    setIsProductDialogOpen(false);
-  };
-
-  const handleAddClient = () => {
-    const id = (clients.length + 1).toString();
-    setClients([...clients, { ...newClient, id }]);
-    setNewClient({ name: "", company: "", email: "" });
-    setIsClientDialogOpen(false);
-  };
+  // const handleAddClient = () => {
+  //   const id = (clients.length + 1).toString();
+  //   setClients([...clients, { ...newClient, id }]);
+  //   setNewClient({ name: "", company: "", email: "" });
+  //   setIsClientDialogOpen(false);
+  // };
 
   return (
     <Sidebar>
@@ -274,7 +257,7 @@ const Agency = () => {
           </div>
         </section> */}
         <section>
-          <Evernote />
+          <Evernote notesData={notes} />
         </section>
       </div>
     </Sidebar>

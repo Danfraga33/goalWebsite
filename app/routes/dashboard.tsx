@@ -6,13 +6,8 @@ import { redirect, useLoaderData } from "@remix-run/react";
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
 
-function getPageCategory(requestUrl) {
-  const url = new URL(requestUrl);
-  let pageCategory = url.pathname.replace(/^\//, "");
-  pageCategory = pageCategory.replace(/^\w/, (c) => c.toUpperCase());
-  return pageCategory;
-}
 export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const notes = await db.note.findMany({
@@ -38,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return redirect("/Dashboard");
+  return null;
 }
 
 export default function Dashboard() {

@@ -1,12 +1,43 @@
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-
 import Evernote from "~/components/Evernote";
-import CapitalGrowth from "~/components/CapitalGrowth";
-import AddStock from "~/components/AddStockBtn";
-import StockList from "~/components/StockList";
+import { db } from "~/lib/db/db";
+import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
+import { useLoaderData } from "@remix-run/react";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  console.log(formData);
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return null;
+}
 
 const PublicEquities = () => {
+  const { notes } = useLoaderData<typeof loader>();
+
   const capitalGrowthData = [
     { month: "January", growth: 2000 },
     { month: "February", growth: 2200 },
@@ -33,7 +64,7 @@ const PublicEquities = () => {
           />
         </section> */}
 
-        <Evernote />
+        <Evernote notesData={notes} />
       </div>
     </Sidebar>
   );

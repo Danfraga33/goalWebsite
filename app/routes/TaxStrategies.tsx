@@ -5,12 +5,45 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Form } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { Separator } from "~/components/ui/separator";
 import { Plus } from "lucide-react";
 import Evernote from "~/components/Evernote";
+import { db } from "~/lib/db/db";
+import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  console.log(formData);
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return null;
+}
 
 const TaxStrategies = () => {
+  const { notes } = useLoaderData<typeof loader>();
   const [strategies, setStrategies] = useState([
     "Maximize retirement account contributions (401(k), IRA)",
     "Take advantage of tax-loss harvesting in investment accounts",
@@ -141,7 +174,7 @@ const TaxStrategies = () => {
           </Card>
         </div>{" "}
         <section className="py-2">
-          <Evernote />
+          <Evernote notesData={notes} />
         </section>
       </div>
     </Sidebar>
