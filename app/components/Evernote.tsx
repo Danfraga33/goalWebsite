@@ -19,6 +19,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
+import { getPageCategory } from "~/utils/pageUtils";
 
 const Evernote = ({ notesData }: { notesData: any[] }) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
@@ -77,7 +78,6 @@ const Evernote = ({ notesData }: { notesData: any[] }) => {
     return url.replace(/^\//, "");
   };
   const pageCategory = normalizeUrl(location.pathname);
-  console.log(pageCategory);
 
   return (
     <Card className="flex overflow-hidden">
