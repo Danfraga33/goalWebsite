@@ -112,7 +112,7 @@ const Evernote = ({ notesData }: { notesData: any[] }) => {
                 className={`flex items-center justify-between rounded-md p-2 ${
                   selectedNote?.id === note.id
                     ? "bg-primary text-primary-foreground"
-                    : "hover:bg-gray-100"
+                    : "hover:bg-gray-100 hover:text-black"
                 }`}
               >
                 <div
