@@ -19,13 +19,13 @@ enum NoteCategory {
   Dashboard
   Education
   SaaS
-  Savings
+  SavingsAccount
   ECommerce
   Job
   Agency
   Dividends
   RentalIncome
-  Tax
+  TaxStrategies
   PublicEquities
   RealEstate
   VentureCapital
