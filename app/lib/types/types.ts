@@ -4,7 +4,17 @@ export interface Note {
   content: string;
   createdAt: Date;
 }
+export interface SavingsAccount {
+  id: string;
+  name: string;
+  balance: number;
+  interestRate: number;
+}
 
+export interface Category {
+  id: number;
+  title: string;
+}
 export interface Client {
   id: string;
   name: string;
