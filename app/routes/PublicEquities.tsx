@@ -6,6 +6,18 @@ import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
 import { getPageCategory } from "~/utils/pageUtils";
 import { useLoaderData } from "@remix-run/react";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
@@ -22,7 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -32,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return { success: true, addNote };
 }
 
 const PublicEquities = () => {

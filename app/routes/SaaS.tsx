@@ -1,10 +1,6 @@
-import { useState } from "react";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
-import TotalIncome from "~/components/TotalIncome";
-import { projectsData } from "~/lib/constants/projects";
-import SaaSProjects from "~/components/SaaSProjects";
 import { getPageCategory } from "~/utils/pageUtils";
 import { db } from "~/lib/db/db";
 import { NoteCategory } from "@prisma/client";
@@ -14,7 +10,6 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -24,7 +19,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return json({ success: true });
+  return json({ success: true, addNote });
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -39,7 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const SaasPlanner = () => {
   const { notes } = useLoaderData<typeof loader>();
-  console.log(notes);
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">

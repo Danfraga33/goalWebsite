@@ -1,14 +1,10 @@
 import { NoteCategory } from "@prisma/client";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 import Evernote from "~/components/Evernote";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { clientsData } from "~/lib/data/clients";
-import { productsData } from "~/lib/data/products";
 import { db } from "~/lib/db/db";
-import { Client, Product } from "~/lib/types/types";
 import { getPageCategory } from "~/utils/pageUtils";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -26,7 +22,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -36,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return json({ success: true, addNote });
 }
 
 const Agency = () => {

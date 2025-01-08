@@ -1,14 +1,6 @@
-import { useState } from "react";
 import Evernote from "~/components/Evernote";
-import TotalIncome from "~/components/TotalIncome";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Separator } from "~/components/ui/separator";
-import OccupationDetails from "~/components/OccupationDetails";
-import IncomeBreakdown from "~/components/IncomeBreakdown";
 import { getPageCategory } from "~/utils/pageUtils";
 import { db } from "~/lib/db/db";
 import { NoteCategory } from "@prisma/client";
@@ -30,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
+
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -40,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return json({ success: true, addNote });
 }
 
 const Job = () => {

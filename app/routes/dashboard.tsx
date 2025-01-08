@@ -1,8 +1,7 @@
-import WorkflowChart from "~/components/Workflow";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
-import { redirect, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
@@ -23,7 +22,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -33,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return json({ success: true, addNote });
 }
 
 export default function Dashboard() {
