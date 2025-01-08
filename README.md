@@ -13,3 +13,4 @@ Plan
   - Danielfraga.dev (Portfolio) ==> Tech Projects I am working on
 - Weekly Schedule
 - Daily To DO
+- Daily Journal
