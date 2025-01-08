@@ -11,9 +11,25 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
 }
+
+model NavItem {
+  id        Int      @id @default(autoincrement())
+  title     String
+  url       String
+  isActive  Boolean
+  category  NavCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+model NavCategory {
+  id    Int      @id @default(autoincrement())
+  title String
+  url   String
+  items NavItem[]
+}
+
 enum NoteCategory {
+  Flow
   IncomeOverview
   InvestOverview
   Dashboard
