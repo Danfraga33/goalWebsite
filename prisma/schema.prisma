@@ -45,6 +45,8 @@ enum NoteCategory {
   PublicEquities
   RealEstate
   VentureCapital
+  WeeklySchedule
+  Journal
 }
 
 model User {
@@ -59,7 +61,7 @@ model Note {
   title     String
   category  NoteCategory
   content   String?
-  createdAt Boolean @default(false)
+  createdAt DateTime @default(now())
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
 }
