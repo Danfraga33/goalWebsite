@@ -1,8 +1,10 @@
 export interface Note {
-  id: string;
+  id: number;
   title: string;
-  content: string;
+  category: NoteCategory;
+  content: string | null;
   createdAt: Date;
+  authorId: number;
 }
 export interface SavingsAccount {
   id: string;
@@ -35,17 +37,28 @@ export interface SaaSProject {
 }
 
 export enum NoteCategory {
+  Flow = "Flow",
+  IncomeOverview = "IncomeOverview",
+  InvestOverview = "InvestOverview",
   Dashboard = "Dashboard",
   Education = "Education",
   SaaS = "SaaS",
-  Savings = "Savings",
+  Savings = "SavingsAccount",
   ECommerce = "ECommerce",
   Job = "Job",
   Agency = "Agency",
   Dividends = "Dividends",
   RentalIncome = "RentalIncome",
-  Tax = "Tax",
+  Tax = "TaxStrategies",
   PublicEquities = "PublicEquities",
   RealEstate = "RealEstate",
   VentureCapital = "VentureCapital",
+}
+export interface Activity {
+  id: string;
+  time: string;
+  description: string;
+}
+export interface DaySchedule {
+  [key: string]: Activity[];
 }
