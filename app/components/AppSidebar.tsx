@@ -1,4 +1,4 @@
-import { ChartCandlestick, GalleryVerticalEnd, Plus } from "lucide-react";
+import { GalleryVerticalEnd } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,15 +13,23 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "~/components/ui/sidebar";
-import { Link } from "@remix-run/react";
+import { Link, json, useLoaderData } from "@remix-run/react";
 
 import { NavData } from "~/lib/data/nav";
 import NavUser from "./navUser";
 import { ComponentProps } from "react";
-import { Button } from "./ui/button";
 import Help from "./Help";
+import AddCategory from "./AddCategory";
+import { db } from "~/lib/db/db";
 
+export async function loader() {
+  const navData = await db.navItem.findMany();
+
+  return json(navData);
+}
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const navData = useLoaderData<typeof loader>();
+
   return (
     <Sidebar
       {...props}
@@ -47,13 +55,8 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
+          <AddCategory />
           <SidebarMenu>
-            <Button>
-              <span>
-                <Plus />
-              </span>
-              Add
-            </Button>
             {NavData.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <div>
@@ -63,17 +66,23 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                     </Link>
                   </SidebarMenuButton>
                 </div>
-                {item.items?.length ? (
+                {item.items?.filter((subItem) => subItem.isActive).length >
+                  0 && (
                   <SidebarMenuSub>
-                    {item.items.map((item) => (
-                      <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <Link to={item.url}>{item.title}</Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
+                    {item.items
+                      .filter((subItem) => subItem.isActive)
+                      .map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={subItem.isActive}
+                          >
+                            <Link to={subItem.url}>{subItem.title}</Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
                   </SidebarMenuSub>
-                ) : null}
+                )}
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
