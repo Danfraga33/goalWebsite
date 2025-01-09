@@ -2,9 +2,9 @@ import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
 import GoalSetting from "~/components/GoalSetting";
-import { NoteCategory } from "@prisma/client";
+import { Note, NoteCategory } from "@prisma/client";
 import { db } from "~/lib/db/db";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { getPageCategory } from "~/utils/pageUtils";
 
@@ -15,11 +15,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
       category: pageCategory as NoteCategory,
     },
   });
-  return json(notes);
+  return json(notes as Note[]);
+}
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: (formData.get("content") as string) ?? "Enter text...",
+    },
+  });
+
+  return { success: true, addNote };
 }
 
 const Notes = () => {
   const notes = useLoaderData<typeof loader>();
+
   if (notes.length === 0) {
   }
   return (

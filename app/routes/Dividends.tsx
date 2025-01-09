@@ -22,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
+
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -32,20 +32,12 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return { success: true, addNote };
 }
 
 const Dividends = () => {
   const { notes } = useLoaderData<typeof loader>();
 
-  const monthlyIncomeData = [
-    { month: "Jan", income: 25000 },
-    { month: "Feb", income: 27000 },
-    { month: "Mar", income: 28500 },
-    { month: "Apr", income: 26000 },
-    { month: "May", income: 29000 },
-    { month: "Jun", income: 31000 },
-  ];
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
@@ -53,12 +45,10 @@ const Dividends = () => {
           <PageTitle>Dividend Income</PageTitle>
           {/* <AddStock /> */}
         </div>
-        {/* <section>
-          <StockList />
-        </section>
-        <section>
-          <MonthlyIncomeChart incomeData={monthlyIncomeData} />
-        </section> */}
+        {/* <section> */}
+        {/* <StockList /> */}
+        {/* </section> */}
+        {/* <MonthlyIncomeChart incomeData={monthlyIncomeData} /> */}
         <section>
           <Evernote notesData={notes} />
         </section>

@@ -22,7 +22,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
@@ -32,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 
-  return null;
+  return { success: true, addNote };
 }
 
 const InvestOverview = () => {

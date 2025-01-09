@@ -36,7 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Dashboard() {
   const { notes } = useLoaderData<typeof loader>();
-
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">

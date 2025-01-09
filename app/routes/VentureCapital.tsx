@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { Startup } from "~/lib/constants/ventureCapital";
+import { Startup } from "~/lib/constants/VentureCapital";
 import Evernote from "~/components/Evernote";
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -26,7 +26,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  console.log(formData);
   const addNote = await db.note.create({
     data: {
       authorId: 1,
