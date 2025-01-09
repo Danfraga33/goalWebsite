@@ -6,18 +6,6 @@ import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
 import { getPageCategory } from "~/utils/pageUtils";
 import { useLoaderData } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
@@ -48,15 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 const PublicEquities = () => {
   const { notes } = useLoaderData<typeof loader>();
-
-  const capitalGrowthData = [
-    { month: "January", growth: 2000 },
-    { month: "February", growth: 2200 },
-    { month: "March", growth: 2500 },
-    { month: "April", growth: 2800 },
-    { month: "May", growth: 3100 },
-    { month: "June", growth: 3500 },
-  ];
 
   return (
     <Sidebar>
