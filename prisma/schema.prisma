@@ -47,6 +47,8 @@ enum NoteCategory {
   VentureCapital
   WeeklySchedule
   Journal
+  DeepDive
+}
 }
 
 model User {
