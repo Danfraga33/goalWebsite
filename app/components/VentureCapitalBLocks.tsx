@@ -9,8 +9,8 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Badge } from "~/components/ui/badge";
-import { VentureCapitalDeals } from "~/lib/constants/ventureCapital";
-import { Startup } from "~/lib/constants/ventureCapital";
+import { VentureCapitalDeals } from "~/lib/constants/VentureCapital";
+import { Startup } from "~/lib/constants/VentureCapital";
 
 const VentureCapitalBLocks = () => {
   const [selectedStartup, setSelectedStartup] = useState<Startup | null>(null);
