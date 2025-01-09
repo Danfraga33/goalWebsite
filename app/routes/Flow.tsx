@@ -1,17 +1,43 @@
 import { useState } from "react";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
-import { GoalCategory } from "~/components/GoalCategory";
-import { Button } from "~/components/ui/button";
-import { Plus } from "lucide-react";
 import Evernote from "~/components/Evernote";
+import { json, useLoaderData } from "@remix-run/react";
+import { NoteCategory } from "@prisma/client";
+import { db } from "~/lib/db/db";
+import { getPageCategory } from "~/utils/pageUtils";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { Category } from "~/lib/types/types";
 
-interface Category {
-  id: number;
-  title: string;
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const notes = await db.note.findMany({
+    where: {
+      category: pageCategory as NoteCategory,
+    },
+  });
+
+  if (!notes) throw new Response("Not Found", { status: 404 });
+  return json({ notes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const formData = await request.formData();
+  const addNote = await db.note.create({
+    data: {
+      authorId: 1,
+      category: pageCategory as NoteCategory,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+    },
+  });
+
+  return { success: true, addNote };
 }
 
 const Flow = () => {
+  const { notes } = useLoaderData<typeof loader>();
   const [categories, setCategories] = useState<Category[]>([
     { id: 1, title: "Personal Goals" },
     { id: 2, title: "Fitness Goals" },
@@ -55,7 +81,7 @@ const Flow = () => {
             />
           ))}
         </div> */}
-        <Evernote />
+        <Evernote notesData={notes} />
       </div>
     </Sidebar>
   );
