@@ -1,5 +1,3 @@
-import { NoteCategory } from "@prisma/client";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Table,
@@ -9,8 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { db } from "~/lib/db/db";
-import { getPageCategory } from "~/utils/pageUtils";
 
 const Savings = () => {
   const savingsData = [{ type: "Savings Account", value: 20000 }];
