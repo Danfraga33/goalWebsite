@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import { CurrentOccupation } from "~/lib/constants/jobIncome";
+import { CurrentOccupation } from "~/lib/constants/JobIncome";
 
 const OccupationDetails = () => {
   return (
