@@ -1,5 +1,5 @@
 import { useLocation } from "@remix-run/react";
-import { AppSidebar } from "./app-sidebar";
+import { AppSidebar } from "./AppSidebar";
 import { ModeToggle } from "./mode-toggle";
 import {
   Breadcrumb,
