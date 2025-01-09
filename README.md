@@ -12,5 +12,6 @@ Plan
   - Tech Investment Blog (Personal Hosted) => My Investments
   - Danielfraga.dev (Portfolio) ==> Tech Projects I am working on
 - Weekly Schedule
-- Daily To DO
+- Daily To do
 - Daily Journal
+- Put Kanban boards in
