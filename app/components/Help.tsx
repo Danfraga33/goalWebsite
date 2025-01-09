@@ -13,7 +13,7 @@ import {
 
 const Help = () => {
   return (
-    <Collapsible defaultOpen className="group/collapsible">
+    <Collapsible className="group/collapsible">
       <SidebarGroup>
         <SidebarGroupLabel asChild>
           <CollapsibleTrigger>
