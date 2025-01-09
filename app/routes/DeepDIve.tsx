@@ -279,6 +279,7 @@ const DeepDive = () => {
                       <CardDescription>
                         Notes on {section.title}
                       </CardDescription>
+                      <Separator />
                     </CardHeader>
                     <CardContent>
                       <ScrollArea className="h-[300px] w-full pr-4">
