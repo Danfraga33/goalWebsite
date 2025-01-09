@@ -9,7 +9,9 @@ export const NavData = {
           url: "/Dashboard",
           isActive: false,
         },
-        { title: "Education", url: "/Education", isActive: false },
+        { title: "Education", url: "/Education", isActive: true },
+        { title: "Journal", url: "/Journal", isActive: true },
+        { title: "Weekly Schedule", url: "/WeeklySchedule", isActive: true },
       ],
     },
     {
@@ -19,7 +21,7 @@ export const NavData = {
         {
           title: "Savings Accounts",
           url: "/SavingsAccount",
-          isActive: false,
+          isActive: true,
         },
         {
           title: "SaaS",
