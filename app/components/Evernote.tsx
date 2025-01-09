@@ -21,7 +21,7 @@ import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
 import { getPageCategory } from "~/utils/pageUtils";
 
-const Evernote = ({ notesData }: { notesData: any[] }) => {
+const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,7 +80,7 @@ const Evernote = ({ notesData }: { notesData: any[] }) => {
   const pageCategory = normalizeUrl(location.pathname);
 
   return (
-    <Card className="flex overflow-hidden">
+    <Card className="flex h-full overflow-hidden">
       <div className="w-1/3 border-r border-gray-200 p-4">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ const Evernote = ({ notesData }: { notesData: any[] }) => {
               readOnly={!isEditing}
             />
             <Textarea
-              value={selectedNote.content}
+              value={selectedNote.content ?? "Enter Text..."}
               onChange={(e) => handleNoteChange("content", e.target.value)}
               className="h-full min-h-[400px] resize-none"
               placeholder="Start typing your note here..."
