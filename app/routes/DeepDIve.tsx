@@ -286,7 +286,7 @@ const DeepDive = () => {
                         {section.notes.map((note) => (
                           <div
                             key={note.id}
-                            className="mb-4"
+                            className="mb-4 cursor-pointer"
                             onClick={() => handleNoteClick(note)}
                           >
                             <h4 className="font-semibold">{note.title}</h4>
