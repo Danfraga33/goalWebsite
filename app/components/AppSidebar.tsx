@@ -13,22 +13,20 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "~/components/ui/sidebar";
-import { Link, json, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 
 import { NavData } from "~/lib/data/nav";
 import NavUser from "./navUser";
 import { ComponentProps } from "react";
 import Help from "./Help";
-import AddCategory from "./AddCategory";
-import { db } from "~/lib/db/db";
+import AddNav from "./AddNav";
+// export async function loader() {
+//   const navData = await db.navItem.findMany();
 
-export async function loader() {
-  const navData = await db.navItem.findMany();
-
-  return json(navData);
-}
+//   return json(navData);
+// }
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const navData = useLoaderData<typeof loader>();
+  // const navData = useLoaderData<typeof loader>();
 
   return (
     <Sidebar
@@ -55,7 +53,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <AddCategory />
+          <AddNav />
           <SidebarMenu>
             {NavData.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
