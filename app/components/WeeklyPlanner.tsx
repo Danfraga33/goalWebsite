@@ -24,8 +24,6 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
     description: "",
   });
 
-  console.log("DAILY TASKS", dailyTasks);
-
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
   const startDate = startOfWeek(new Date(), { weekStartsOn: 1 });
