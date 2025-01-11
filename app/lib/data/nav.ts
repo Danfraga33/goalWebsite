@@ -9,7 +9,7 @@ export const NavData = {
           url: "/Dashboard",
           isActive: false,
         },
-        { title: "Education", url: "/Education", isActive: true },
+        { title: "General", url: "/Education", isActive: true },
         { title: "Journal", url: "/Journal", isActive: true },
         { title: "Weekly Schedule", url: "/WeeklySchedule", isActive: true },
         { title: "Deep Dive", url: "/DeepDive", isActive: true },
@@ -22,7 +22,7 @@ export const NavData = {
         {
           title: "Savings Accounts",
           url: "/SavingsAccount",
-          isActive: true,
+          isActive: false,
         },
         {
           title: "SaaS",
@@ -37,7 +37,7 @@ export const NavData = {
         {
           title: "Job",
           url: "/Job",
-          isActive: false,
+          isActive: true,
         },
         {
           title: "E-commerce",
@@ -52,7 +52,7 @@ export const NavData = {
         {
           title: "Dividends",
           url: "/dividends",
-          isActive: true,
+          isActive: false,
         },
         {
           title: "Tax Strategies",
