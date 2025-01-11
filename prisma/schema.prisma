@@ -25,6 +25,7 @@ model User {
   WeeklySchedule   WeeklySchedule? @relation(fields: [weeklyScheduleId], references: [id])
   weeklyScheduleId Int?
   DailyTask        DailyTask[]
+  Topics           Topic[]
 }
 
 model WeeklySchedule {
@@ -63,6 +64,30 @@ model JournalEntry {
   content String?
 
   @@unique([userId, date])
+}
+
+model Topic {
+  id       Int       @id @default(autoincrement())
+  title    String
+  sections Section[]
+  userId   Int
+  user     User      @relation(fields: [userId], references: [id])
+}
+
+model Section {
+  id           Int         @id @default(autoincrement())
+  title        String
+  sectionNotes StudyNote[]
+  topic        Topic?      @relation(fields: [topicId], references: [id])
+  topicId      Int?
+}
+
+model StudyNote {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  sectionId Int?
+  section   Section? @relation(fields: [sectionId], references: [id])
 }
 
 model NavCategory {
