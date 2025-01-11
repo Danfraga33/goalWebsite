@@ -4,8 +4,14 @@ export interface Note {
   category: NoteCategory;
   content: string | null;
   createdAt: Date;
-  authorId: number;
+  userId: number;
 }
+
+export interface JournalEntry {
+  date: Date;
+  content: string;
+}
+
 export interface SavingsAccount {
   id: string;
   name: string;
@@ -23,6 +29,22 @@ export interface Client {
   company: string;
   email: string;
 }
+export enum DaysOfWeeks {
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+}
+export type DailyTask = {
+  id: number;
+  time: string;
+  description: string;
+  day: DaysOfWeeks;
+  userId: number;
+};
 export interface Product {
   id: string;
   name: string;
