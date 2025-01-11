@@ -13,19 +13,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               Int             @id @default(autoincrement())
+  email            String          @unique
+  name             String?
+  Notes            Note[]
+  StudyNotes       StudyNotes[]
+  NavCategory      NavCategory[]
+  NavItem          NavItem[]
+  JournalEntry     JournalEntry[]
+  WeeklySchedule   WeeklySchedule? @relation(fields: [weeklyScheduleId], references: [id])
+  weeklyScheduleId Int?
+  DailyTask        DailyTask[]
+}
+
+model WeeklySchedule {
+  id          Int         @id @default(autoincrement())
+  day         DaysOfWeeks
+  time        String
+  description String
+  userId      Int
+  user        User[]
+}
+
+model DailyTask {
+  id          Int    @id @default(autoincrement())
+  time        String @default("12:00PM")
+  description String
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
 model NavItem {
-  id        Int      @id @default(autoincrement())
-  title     String
-  url       String
-  isActive  Boolean
-  category  NavCategory @relation(fields: [categoryId], references: [id])
+  id         Int         @id @default(autoincrement())
+  title      String
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  url        String
+  isActive   Boolean
+  category   NavCategory @relation(fields: [categoryId], references: [id])
   categoryId Int
 }
+
+model JournalEntry {
+  id      Int      @id @default(autoincrement())
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+  date    DateTime @default(now())
+  content String?
+}
+
 model NavCategory {
-  id    Int      @id @default(autoincrement())
-  title String
-  url   String
-  items NavItem[]
+  id     Int       @id @default(autoincrement())
+  title  String
+  url    String
+  items  NavItem[]
+  User   User?     @relation(fields: [userId], references: [id])
+  userId Int?
 }
 
 enum NoteCategory {
@@ -49,23 +93,32 @@ enum NoteCategory {
   Journal
   DeepDive
 }
-}
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  Notes Note[]
+enum DaysOfWeeks {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
 
 model Note {
-  id        Int     @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   title     String
   category  NoteCategory
   content   String?
-  createdAt DateTime @default(now())
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  createdAt DateTime     @default(now())
+  user      User         @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
-
+model StudyNotes {
+  id      Int     @id @default(autoincrement())
+  User    User    @relation(fields: [userId], references: [id])
+  userId  Int
+  topic   String
+  section String
+  content String?
+}

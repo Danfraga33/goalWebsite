@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -12,74 +12,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import Sidebar from "~/components/sidebar";
-import PageTitle from "~/components/PageTitle";
-import { CircleX, Cross } from "lucide-react";
+import { CircleX } from "lucide-react";
+import { Form, useLocation } from "@remix-run/react";
+import { WeeklySchedule } from "@prisma/client";
+import { daysOfWeek } from "~/lib/constants/DaysOfWeek";
+import { Activity } from "~/lib/types/types";
 
-interface Activity {
-  id: string;
-  time: string;
-  description: string;
-}
-
-interface DaySchedule {
-  [key: string]: Activity[];
-}
-
-const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-const WeeklyPlanner = () => {
-  const [schedule, setSchedule] = useState<DaySchedule>({
-    Monday: [],
-    Tuesday: [],
-    Wednesday: [],
-    Thursday: [],
-    Friday: [],
-    Saturday: [],
-    Sunday: [],
-  });
-
+const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
   const [newActivity, setNewActivity] = useState<Omit<Activity, "id">>({
     time: "",
     description: "",
   });
 
+  console.log("DAILY TASKS", dailyTasks);
+
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
 
-  const addActivity = () => {
-    if (newActivity.time && newActivity.description) {
-      setSchedule((prevSchedule) => ({
-        ...prevSchedule,
-        [selectedDay]: [
-          ...prevSchedule[selectedDay],
-          { ...newActivity, id: Math.random().toString(36).substr(2, 9) },
-        ].sort((a, b) => a.time.localeCompare(b.time)),
-      }));
-      setNewActivity({ time: "", description: "" });
-    }
-  };
-
-  const removeActivity = (day: string, id: string) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [day]: prevSchedule[day].filter((activity) => activity.id !== id),
-    }));
-  };
-
   const startDate = startOfWeek(new Date(), { weekStartsOn: 1 });
-
+  const location = useLocation();
+  const pageCategory = location.pathname;
   return (
-    <>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
-        {daysOfWeek.map((day, index) => (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
+      {daysOfWeek.map((day, index) => {
+        const dayActivities = dailyTasks.filter(
+          (activity) => activity.day === day,
+        );
+        return (
           <Card key={day} className="flex flex-col">
             <CardHeader>
               <CardTitle>{day}</CardTitle>
@@ -89,7 +47,7 @@ const WeeklyPlanner = () => {
             </CardHeader>
             <CardContent className="flex-grow">
               <ScrollArea className="h-48">
-                {schedule[day].map((activity) => (
+                {dayActivities.map((activity) => (
                   <div
                     key={activity.id}
                     className="mb-2 flex items-center justify-between"
@@ -98,10 +56,11 @@ const WeeklyPlanner = () => {
                       <span className="font-medium">{activity.time}</span>
                       <p className="text-sm">{activity.description}</p>
                     </div>
+
                     <Button
                       variant="destructive"
                       size="icon"
-                      onClick={() => removeActivity(day, activity.id)}
+                      onClick={() => null}
                       className="flex p-0"
                     >
                       <CircleX />
@@ -122,49 +81,61 @@ const WeeklyPlanner = () => {
                   <DialogHeader>
                     <DialogTitle>Add Activity for {selectedDay}</DialogTitle>
                   </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="time" className="text-right">
-                        Time
-                      </Label>
-                      <Input
-                        id="time"
-                        type="time"
-                        value={newActivity.time}
-                        onChange={(e) =>
-                          setNewActivity({
-                            ...newActivity,
-                            time: e.target.value,
-                          })
-                        }
-                        className="col-span-3"
-                      />
+                  <Form method="post" action={pageCategory}>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="time" className="text-right">
+                          Time
+                        </Label>
+                        <Input
+                          id="time"
+                          name="time"
+                          type="time"
+                          value={newActivity.time}
+                          onChange={(e) =>
+                            setNewActivity({
+                              ...newActivity,
+                              time: e.target.value,
+                            })
+                          }
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="description" className="text-right">
+                          Description
+                        </Label>
+                        <Input
+                          id="description"
+                          name="description"
+                          value={newActivity.description}
+                          onChange={(e) =>
+                            setNewActivity({
+                              ...newActivity,
+                              description: e.target.value,
+                            })
+                          }
+                          className="col-span-3"
+                        />
+                        <input
+                          type="text"
+                          hidden
+                          value={selectedDay}
+                          name="day"
+                          onChange={() => null}
+                        />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="description" className="text-right">
-                        Description
-                      </Label>
-                      <Input
-                        id="description"
-                        value={newActivity.description}
-                        onChange={(e) =>
-                          setNewActivity({
-                            ...newActivity,
-                            description: e.target.value,
-                          })
-                        }
-                        className="col-span-3"
-                      />
-                    </div>
-                  </div>
-                  <Button onClick={addActivity}>Add Activity</Button>
+                    <Button type="submit">Add Activity</Button>
+                  </Form>
+                  {/* <Button onClick={addActivity}>Add Activity</Button> */}
                 </DialogContent>
               </Dialog>
             </CardContent>
           </Card>
-        ))}
-      </div>
-    </>
+        );
+      })}
+    </div>
   );
 };
 
