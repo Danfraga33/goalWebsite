@@ -7,13 +7,11 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import { Card } from "~/components/ui/card";
-import { JournalEntry } from "~/lib/types/types";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { getPageCategory } from "~/utils/pageUtils";
+import { ActionFunctionArgs, json } from "@remix-run/node";
 import { db } from "~/lib/db/db";
 import { Form, useLoaderData } from "@remix-run/react";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   const journalEntries = await db.journalEntry.findMany({
     where: {
       userId: 1,
@@ -29,8 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!date || !content) {
     return json({ error: "Date and content are required." }, { status: 400 });
   }
-
-  const parsedDate = new Date(date);
 
   try {
     const addJournalEntry = await db.journalEntry.upsert({
