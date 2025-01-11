@@ -29,22 +29,41 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!date || !content) {
     return json({ error: "Date and content are required." }, { status: 400 });
   }
-  const addJournalEntry = await db.journalEntry.create({
-    data: {
-      userId: 1,
-      date,
-      content,
-    },
-  });
 
-  console.log("CONTENT", content);
+  const parsedDate = new Date(date);
 
-  return { success: true, addJournalEntry };
+  try {
+    const addJournalEntry = await db.journalEntry.upsert({
+      where: {
+        userId_date: {
+          // Use a compound unique constraint name if applicable
+          userId: 1,
+          date: new Date(date),
+        },
+      },
+      update: {
+        content,
+      },
+      create: {
+        userId: 1,
+        date: new Date(date),
+        content,
+      },
+    });
+
+    return { success: true, addJournalEntry };
+  } catch (error) {
+    if (error.code === "P2002") {
+      return json(
+        { error: "An entry for this date alerady exists" },
+        { status: 404 },
+      );
+    }
+  }
 }
 
 const Journal = () => {
   const { journalEntries } = useLoaderData<typeof loader>();
-  const [entries, setEntries] = useState<JournalEntry[]>(journalEntries);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [currentEntry, setCurrentEntry] = useState("");
 
@@ -83,18 +102,6 @@ const Journal = () => {
                 onSelect={(date) => date && setSelectedDate(date)}
                 className="rounded-md border"
               />
-              <ScrollArea className="h-40 rounded-md border p-4">
-                {getEntryForDate(selectedDate) ? (
-                  <div>
-                    <h3 className="font-semibold">
-                      {format(selectedDate, "MMMM d, yyyy")}
-                    </h3>
-                    <p>{getEntryForDate(selectedDate)?.content}</p>
-                  </div>
-                ) : (
-                  <p>No entry for this date.</p>
-                )}
-              </ScrollArea>
             </div>
           </Card>
           <input
@@ -106,6 +113,18 @@ const Journal = () => {
             readOnly
           />
         </Form>
+        <ScrollArea className="h-40 rounded-md border p-4">
+          {getEntryForDate(selectedDate) ? (
+            <div>
+              <h3 className="font-semibold">
+                {format(selectedDate, "MMMM d, yyyy")}
+              </h3>
+              <p>{getEntryForDate(selectedDate)?.content}</p>
+            </div>
+          ) : (
+            <p>No entry for this date.</p>
+          )}
+        </ScrollArea>
       </div>
     </Sidebar>
   );
