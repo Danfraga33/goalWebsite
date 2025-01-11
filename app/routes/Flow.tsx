@@ -26,7 +26,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const addNote = await db.note.create({
     data: {
-      authorId: 1,
+      userId: 1,
       category: pageCategory as NoteCategory,
       title: formData.get("title") as string,
       content: formData.get("content") as string,
@@ -43,22 +43,6 @@ const Flow = () => {
     { id: 2, title: "Fitness Goals" },
     { id: 3, title: "Financial Goals" },
   ]);
-
-  const addCategory = () => {
-    const newId = Math.max(...categories.map((c) => c.id), 0) + 1;
-    setCategories([
-      ...categories,
-      { id: newId, title: `New Category ${newId}` },
-    ]);
-  };
-
-  const updateCategoryTitle = (id: number, newTitle: string) => {
-    setCategories(
-      categories.map((category) =>
-        category.id === id ? { ...category, title: newTitle } : category,
-      ),
-    );
-  };
 
   return (
     <Sidebar>

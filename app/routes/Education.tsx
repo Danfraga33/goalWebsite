@@ -1,7 +1,6 @@
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
-import GoalSetting from "~/components/GoalSetting";
 import { Note, NoteCategory } from "@prisma/client";
 import { db } from "~/lib/db/db";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -22,7 +21,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const addNote = await db.note.create({
     data: {
-      authorId: 1,
+      userId: 1,
       category: pageCategory as NoteCategory,
       title: formData.get("title") as string,
       content: (formData.get("content") as string) ?? "Enter text...",

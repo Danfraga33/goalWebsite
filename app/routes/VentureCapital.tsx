@@ -28,7 +28,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const addNote = await db.note.create({
     data: {
-      authorId: 1,
+      userId: 1,
       category: pageCategory as NoteCategory,
       title: formData.get("title") as string,
       content: formData.get("content") as string,

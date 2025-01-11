@@ -2,15 +2,6 @@ import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import Evernote from "~/components/Evernote";
 
-const capitalGrowthData = [
-  { year: 2018, value: 1000000 },
-  { year: 2019, value: 1080000 },
-  { year: 2020, value: 1150000 },
-  { year: 2021, value: 1250000 },
-  { year: 2022, value: 1400000 },
-  { year: 2023, value: 1550000 },
-];
-
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
@@ -34,7 +25,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const addNote = await db.note.create({
     data: {
-      authorId: 1,
+      userId: 1,
       category: pageCategory as NoteCategory,
       title: formData.get("title") as string,
       content: formData.get("content") as string,
