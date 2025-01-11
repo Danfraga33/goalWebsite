@@ -42,7 +42,7 @@ export const NavData = {
         {
           title: "E-commerce",
           url: "/ECommerce",
-          isActive: false,
+          isActive: true,
         },
         {
           title: "Rental Income",
