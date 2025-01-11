@@ -36,7 +36,6 @@ export async function action({ request }: ActionFunctionArgs) {
     const addJournalEntry = await db.journalEntry.upsert({
       where: {
         userId_date: {
-          // Use a compound unique constraint name if applicable
           userId: 1,
           date: new Date(date),
         },
