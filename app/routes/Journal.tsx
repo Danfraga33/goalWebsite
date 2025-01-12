@@ -24,10 +24,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const date = formData.get("date") as string;
   const content = formData.get("content") as string;
 
-  if (!date || !content) {
-    return json({ error: "Date and content are required." }, { status: 400 });
-  }
-
   try {
     const addJournalEntry = await db.journalEntry.upsert({
       where: {
@@ -68,8 +64,6 @@ const Journal = () => {
         format(entry.date, "yyyy-MM-dd") === format(date, "yyyy-MM-dd"),
     );
   };
-
-  console.log(currentEntry);
 
   return (
     <Sidebar>
