@@ -1,8 +1,7 @@
-import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { Search, Trash2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
 import { useLocation } from "@remix-run/react";
@@ -19,7 +18,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
-import { getPageCategory } from "~/utils/pageUtils";
 import DeleteNote from "./DeleteNote";
 
 const Evernote = ({ notesData }: { notesData: Note[] }) => {
