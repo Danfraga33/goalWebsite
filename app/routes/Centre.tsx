@@ -1,24 +1,3 @@
-import * as React from "react";
-
-import {
-  Bell,
-  ChevronDown,
-  Plus,
-  Search,
-  Settings,
-  Trash2,
-  User,
-} from "lucide-react";
-
-import { Button } from "~/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { Input } from "~/components/ui/input";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,24 +6,80 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import { Separator } from "~/components/ui/separator";
-import { StudySelector } from "~/components/studySelection";
 import { Link } from "@remix-run/react";
-import Sidebar from "~/components/sidebar";
+import { EllipsisVertical, Home } from "lucide-react";
+import { useState } from "react";
+import { StudySelector } from "~/components/studySelection";
 
 const navItems = [
-  { title: "Fundamentals", href: "/fundamentals" },
-  { title: "Demand Dynamics", href: "/demand-dynamics" },
-  { title: "Supply Dynamics", href: "/supply-dynamics" },
-  { title: "Technological Advancements", href: "/technological-advancements" },
-  { title: "Economic Impact", href: "/economic-impact" },
-  { title: "Risks and Challenges", href: "/risks-and-challenges" },
-  { title: "Investment Framework", href: "/investment-framework" },
+  {
+    title: "Fundamentals",
+    href: "/fundamentals",
+    subItems: [
+      "Market Types & Structures",
+      "Valuation Techniques",
+      "Risk Assessment Methods",
+    ],
+  },
+  {
+    title: "Demand Dynamics",
+    href: "/demand-dynamics",
+    subItems: [
+      "Consumer Behavior Analysis",
+      "Market Segmentation",
+      "Supply & Demand Curves",
+    ],
+  },
+  {
+    title: "Supply Dynamics",
+    href: "/supply-dynamics",
+    subItems: [
+      "Production Costs & Efficiency",
+      "Supply Chain Management",
+      "Market Entry Barriers",
+    ],
+  },
+  {
+    title: "Technological Advancements",
+    href: "/technological-advancements",
+    subItems: [
+      "Tech Disruption & Investment Opportunities",
+      "Patent Analysis for Investment",
+      "Tech Market Penetration Strategies",
+    ],
+  },
+  {
+    title: "Economic Impact",
+    href: "/economic-impact",
+    subItems: [
+      "Global Economic Trends",
+      "Macroeconomic Indicators",
+      "Interest Rates & Inflation Impact on Investments",
+    ],
+  },
+  {
+    title: "Risks and Challenges",
+    href: "/risks-and-challenges",
+    subItems: [
+      "Market Volatility & Crisis Management",
+      "Geopolitical Risks",
+      "Legal & Regulatory Risks",
+    ],
+  },
+  {
+    title: "Investment Framework",
+    href: "/investment-framework",
+    subItems: [
+      "Investment Portfolio Diversification",
+      "Investment Strategies & Techniques",
+      "Asset Allocation & Risk Management",
+    ],
+  },
 ];
 
 export default function IndustryInsightsDashboard() {
-  const [studies, setStudies] = React.useState(["AI Insights"]);
-  const [selectedStudy, setSelectedStudy] = React.useState("AI Insights");
+  const [studies, setStudies] = useState(["AI Insights"]);
+  const [selectedStudy, setSelectedStudy] = useState("AI Insights");
 
   const addStudy = () => {
     const newStudy = `Study ${studies.length + 1}`;
@@ -61,23 +96,59 @@ export default function IndustryInsightsDashboard() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 p-4">
+    <div className="flex flex-col items-center justify-center gap-6 p-2">
       <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center justify-center">
             {/* Center nav container */}
             <NavigationMenu>
-              <NavigationMenuList className="flex justify-center space-x-4">
-                {/* Center nav items */}
+              <NavigationMenuList>
+                <Link to="/Dashboard">
+                  <Home />
+                </Link>
+                <EllipsisVertical />
                 {navItems.map((item) => (
                   <NavigationMenuItem key={item.title}>
-                    <NavigationMenuTrigger className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                      {item.title}
-                    </NavigationMenuTrigger>
+                    {item.subItems ? (
+                      <NavigationMenuTrigger>
+                        {item.title}
+                      </NavigationMenuTrigger>
+                    ) : (
+                      <Link to={item.href}>
+                        <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                          {item.title}
+                        </NavigationMenuLink>
+                      </Link>
+                    )}
+                    {item.subItems && (
+                      <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                          {item.subItems.map((subItem) => (
+                            <li key={subItem}>
+                              <NavigationMenuLink asChild>
+                                <a
+                                  href="#"
+                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                >
+                                  {subItem}
+                                </a>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    )}
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
+            <StudySelector
+              studies={studies}
+              selectedStudy={selectedStudy}
+              onSelectStudy={setSelectedStudy}
+              onAddStudy={addStudy}
+              onRemoveStudy={removeStudy}
+            />
           </div>
         </header>
         <main className="flex-1">
