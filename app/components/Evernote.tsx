@@ -1,10 +1,10 @@
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { Search } from "lucide-react";
+import { CircleX, Search } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
-import { useLocation } from "@remix-run/react";
+import { Form, useLocation } from "@remix-run/react";
 import { ScrollArea } from "./ui/scroll-area";
 import {
   AlertDialog,
@@ -19,6 +19,7 @@ import {
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
 import DeleteNote from "./DeleteNote";
+import { Button } from "./ui/button";
 
 const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
@@ -28,19 +29,6 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
 
-  const handleNewNote = () => {
-    const newNote: Note = {
-      id: Date.now().toString(),
-      title: "New Note",
-      content: "",
-      createdAt: new Date(),
-    };
-
-    setNotes([newNote, ...notes]);
-    setSelectedNote(newNote);
-    setIsEditing(true);
-  };
-
   const handleNoteChange = (field: "title" | "content", value: string) => {
     if (selectedNote) {
       const updatedNote = { ...selectedNote, [field]: value };
@@ -49,21 +37,6 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
         notes.map((note) => (note.id === selectedNote.id ? updatedNote : note)),
       );
     }
-  };
-
-  const handleDeleteNote = (note: Note) => {
-    setNoteToDelete(note);
-    setDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (noteToDelete) {
-      setNotes(notes.filter((note) => note.id !== noteToDelete.id));
-      if (selectedNote && selectedNote.id === noteToDelete.id) {
-        setSelectedNote(null);
-      }
-    }
-    setDeleteDialogOpen(false);
   };
 
   const filteredNotes = notesData.filter(
@@ -125,7 +98,24 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <DeleteNote noteId={note.id} />
+                  <Form method="DELETE">
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="flex"
+                      type="submit"
+                    >
+                      <CircleX color="red" />
+                    </Button>
+                    <input
+                      type="text"
+                      value={note.id}
+                      hidden
+                      readOnly
+                      name="noteId"
+                    />
+                  </Form>
+                  {/* <DeleteNote noteId={note.id} /> */}
                 </div>
               </div>
             ))
@@ -157,23 +147,6 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
           </div>
         )}
       </div>
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              note.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Card>
   );
 };

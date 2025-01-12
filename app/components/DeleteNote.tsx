@@ -16,12 +16,11 @@ import {
 
 const DeleteNote = ({ noteId }: { noteId: number }) => {
   const location = useLocation();
-  const normalizeUrl = (url: string) => {
-    return url.replace(/^\//, "");
-  };
-  const pageCategory = normalizeUrl(location.pathname);
+  const pageCategory = location.pathname;
+  console.log(pageCategory);
+
   return (
-    <Form method="DELETE" action={`/${pageCategory}`}>
+    <Form method="DELETE">
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button size="icon" variant="ghost">
@@ -38,8 +37,8 @@ const DeleteNote = ({ noteId }: { noteId: number }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button variant="destructive" asChild>
-              <AlertDialogAction>Confirm</AlertDialogAction>
+            <Button variant="destructive" type="submit" asChild>
+              <AlertDialogAction type="submit">Confirm</AlertDialogAction>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

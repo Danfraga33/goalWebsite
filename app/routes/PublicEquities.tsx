@@ -36,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return { success: true, addNote };
     case "DELETE":
       const id = formData.get("noteId");
-
+      console.log("deleting...");
       try {
         const deleteNote = await db.note.delete({
           where: {
@@ -56,6 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       break;
     default:
+      return null;
       break;
   }
 }
