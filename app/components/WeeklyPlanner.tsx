@@ -55,14 +55,23 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       <p className="text-sm">{activity.description}</p>
                     </div>
 
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => null}
-                      className="flex p-0"
-                    >
-                      <CircleX />
-                    </Button>
+                    <Form method="delete" action={pageCategory}>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="flex p-0"
+                        type="submit"
+                      >
+                        <CircleX />
+                      </Button>
+                      <input
+                        type="text"
+                        value={activity.id}
+                        hidden
+                        readOnly
+                        name="activityId"
+                      />
+                    </Form>
                   </div>
                 ))}
               </ScrollArea>
@@ -125,6 +134,13 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       </div>
                     </div>
                     <Button type="submit">Add Activity</Button>
+                    <input
+                      type="text"
+                      hidden
+                      name="form"
+                      value="weeklySchedule"
+                      readOnly
+                    />
                   </Form>
                   {/* <Button onClick={addActivity}>Add Activity</Button> */}
                 </DialogContent>

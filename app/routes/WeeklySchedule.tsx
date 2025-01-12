@@ -20,21 +20,42 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const time = formData.get("time") as string;
-  console.log(time);
-  const day = formData.get("day") as DaysOfWeeks;
-  const description = formData.get("description") as string;
-  const addDailyTask = await db.weeklySchedule.create({
-    data: {
-      userId: 1,
-      day,
-      time,
-      description,
-    },
-  });
-  console.log({ day, time, description });
+  const activityId = formData.get("activityId");
+  console.log(request.method);
+  switch (request.method) {
+    case "DELETE":
+      try {
+        console.log("DEstorying...");
+        const deleteWeeklyTask = await db.weeklySchedule.delete({
+          where: {
+            id: Number(activityId),
+          },
+        });
+        return { success: true, deleteWeeklyTask };
+      } catch (error) {
+        return { error };
+      }
+      break;
+    case "post":
+      const time = formData.get("time") as string;
+      console.log(time);
+      const day = formData.get("day") as DaysOfWeeks;
+      const description = formData.get("description") as string;
+      const addDailyTask = await db.weeklySchedule.create({
+        data: {
+          userId: 1,
+          day,
+          time,
+          description,
+        },
+      });
+      console.log({ day, time, description });
 
-  return { success: true, addDailyTask };
+      return { success: true, addDailyTask };
+    default:
+      return null;
+      break;
+  }
 }
 
 export default function WeeklySchedule() {
