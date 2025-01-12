@@ -20,18 +20,44 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  const addNote = await db.note.create({
-    data: {
-      userId: 1,
-      category: pageCategory as NoteCategory,
-      title: formData.get("title") as string,
-      content: formData.get("content") as string,
-    },
-  });
+  const pageCategory = getPageCategory(request.url);
+  switch (request.method) {
+    case "POST":
+      const addNote = await db.note.create({
+        data: {
+          userId: 1,
+          category: pageCategory as NoteCategory,
+          title: formData.get("title") as string,
+          content: formData.get("content") as string,
+        },
+      });
 
-  return { success: true, addNote };
+      return { success: true, addNote };
+    case "DELETE":
+      const id = formData.get("noteId");
+
+      try {
+        const deleteNote = await db.note.delete({
+          where: {
+            id: Number(id),
+          },
+        });
+        return {
+          success: true,
+          message: "Sucessfully Deleted Not",
+          deleteNote,
+        };
+      } catch (error) {
+        return json(
+          { error: "Unsuccessfull attempt to delete the note" },
+          { status: 404 },
+        );
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 const PublicEquities = () => {

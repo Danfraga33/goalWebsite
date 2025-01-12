@@ -20,6 +20,7 @@ import {
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
 import { getPageCategory } from "~/utils/pageUtils";
+import DeleteNote from "./DeleteNote";
 
 const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
@@ -126,13 +127,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleDeleteNote(note)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <DeleteNote noteId={note.id} />
                 </div>
               </div>
             ))
