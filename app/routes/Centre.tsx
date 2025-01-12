@@ -6,80 +6,62 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-import { Link } from "@remix-run/react";
+import { Link, json, useLoaderData } from "@remix-run/react";
 import { EllipsisVertical, Home } from "lucide-react";
 import { useState } from "react";
 import { StudySelector } from "~/components/studySelection";
+import Evernote from "~/components/Evernote";
+import { navItems } from "~/lib/constants/CentreOfCompetencyNav";
+import { db } from "~/lib/db/db";
+import { DashboardCard } from "~/components/DashboardCard";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { NoteCategory } from "@prisma/client";
+import { getPageCategory } from "~/utils/pageUtils";
 
-const navItems = [
-  {
-    title: "Fundamentals",
-    href: "/fundamentals",
-    subItems: [
-      "Market Types & Structures",
-      "Valuation Techniques",
-      "Risk Assessment Methods",
-    ],
-  },
-  {
-    title: "Demand Dynamics",
-    href: "/demand-dynamics",
-    subItems: [
-      "Consumer Behavior Analysis",
-      "Market Segmentation",
-      "Supply & Demand Curves",
-    ],
-  },
-  {
-    title: "Supply Dynamics",
-    href: "/supply-dynamics",
-    subItems: [
-      "Production Costs & Efficiency",
-      "Supply Chain Management",
-      "Market Entry Barriers",
-    ],
-  },
-  {
-    title: "Technological Advancements",
-    href: "/technological-advancements",
-    subItems: [
-      "Tech Disruption & Investment Opportunities",
-      "Patent Analysis for Investment",
-      "Tech Market Penetration Strategies",
-    ],
-  },
-  {
-    title: "Economic Impact",
-    href: "/economic-impact",
-    subItems: [
-      "Global Economic Trends",
-      "Macroeconomic Indicators",
-      "Interest Rates & Inflation Impact on Investments",
-    ],
-  },
-  {
-    title: "Risks and Challenges",
-    href: "/risks-and-challenges",
-    subItems: [
-      "Market Volatility & Crisis Management",
-      "Geopolitical Risks",
-      "Legal & Regulatory Risks",
-    ],
-  },
-  {
-    title: "Investment Framework",
-    href: "/investment-framework",
-    subItems: [
-      "Investment Portfolio Diversification",
-      "Investment Strategies & Techniques",
-      "Asset Allocation & Risk Management",
-    ],
-  },
-];
+export async function loader({ request }: LoaderFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const competencyNotes = await db.note.findMany({
+    where: { category: pageCategory as NoteCategory },
+  });
+
+  return json({ competencyNotes });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const title = formData.get("title") as string;
+  const content = formData.get("content") as string;
+  const pageCategory = getPageCategory(request.url);
+  switch (request.method) {
+    case "POST":
+      try {
+        const addNote = await db.note.create({
+          data: {
+            userId: 1,
+            category: pageCategory as NoteCategory,
+            title,
+            content,
+          },
+        });
+        return { success: true, addNote };
+      } catch (error) {
+        throw new Error(error.message);
+      }
+
+      break;
+
+    default:
+      console.log("addStudy");
+      break;
+  }
+}
 
 export default function IndustryInsightsDashboard() {
   const [studies, setStudies] = useState(["AI Insights"]);
   const [selectedStudy, setSelectedStudy] = useState("AI Insights");
+
+  const { competencyNotes } = useLoaderData<typeof loader>();
+  console.log(competencyNotes);
 
   const addStudy = () => {
     const newStudy = `Study ${studies.length + 1}`;
@@ -153,12 +135,10 @@ export default function IndustryInsightsDashboard() {
         </header>
         <main className="flex-1">
           <div className="container flex justify-center py-6">
-            {" "}
             {/* Center the main content */}
             <div className="w-full max-w-7xl">
-              {" "}
-              {/* Add max width to avoid too wide content */}
-              <h1 className="mb-6 text-3xl font-bold">
+              {/*  Add max width to avoid too wide content */}
+              <h1 className="mb-6 flex justify-center text-3xl font-bold">
                 Industry Insights Dashboard: {selectedStudy}
               </h1>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -186,24 +166,8 @@ export default function IndustryInsightsDashboard() {
               </div>
             </div>
           </div>
+          <Evernote notesData={competencyNotes} />
         </main>
-      </div>
-    </div>
-  );
-}
-
-function DashboardCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-      <div className="p-6">
-        <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-        {children}
       </div>
     </div>
   );
