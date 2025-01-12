@@ -55,14 +55,14 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       <p className="text-sm">{activity.description}</p>
                     </div>
 
-                    <Form method="delete" action={pageCategory}>
+                    <Form method="DELETE" action={pageCategory}>
                       <Button
-                        variant="destructive"
+                        variant="secondary"
                         size="icon"
-                        className="flex p-0"
+                        className="flex"
                         type="submit"
                       >
-                        <CircleX />
+                        <CircleX color="red" />
                       </Button>
                       <input
                         type="text"
@@ -88,7 +88,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                   <DialogHeader>
                     <DialogTitle>Add Activity for {selectedDay}</DialogTitle>
                   </DialogHeader>
-                  <Form method="post" action={pageCategory}>
+                  <Form method="POST" action={pageCategory}>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="time" className="text-right">
