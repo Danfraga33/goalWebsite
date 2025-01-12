@@ -31,7 +31,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       {...props}
-      className="bg-gray-200 shadow-xl shadow-gray-400 dark:bg-black dark:shadow-gray-700"
+      className="bg-gray-200 shadow-xl shadow-gray-400 dark:bg-[#171719] dark:shadow-gray-700"
       collapsible="icon"
       variant="floating"
     >
