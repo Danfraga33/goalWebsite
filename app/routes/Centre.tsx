@@ -47,9 +47,46 @@ export async function action({ request }: ActionFunctionArgs) {
       } catch (error) {
         throw new Error(error.message);
       }
-
       break;
-
+    case "DELETE":
+      const id = formData.get("noteId");
+      console.log("deleting...");
+      try {
+        const deleteNote = await db.note.delete({
+          where: {
+            id: Number(id),
+          },
+        });
+        return {
+          success: true,
+          message: "Sucessfully Deleted Not",
+          deleteNote,
+        };
+      } catch (error) {
+        return json(
+          { error: "Unsuccessfull attempt to delete the note" },
+          { status: 404 },
+        );
+      }
+      break;
+    case "PATCH":
+      const newTitle = formData.get("newTitle") as string;
+      const newContent = formData.get("newContent") as string;
+      const selectedNoteId = formData.get("noteId");
+      try {
+        const updatedNote = await db.note.update({
+          where: {
+            id: Number(selectedNoteId),
+          },
+          data: {
+            title: newTitle,
+            content: newContent,
+          },
+        });
+        return { success: true, updatedNote };
+      } catch (error) {
+        console.error("Error updating note", error.message);
+      }
     default:
       console.log("addStudy");
       break;

@@ -1,7 +1,7 @@
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { CircleX, Search } from "lucide-react";
+import { BookCopy, CircleX, Search } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
 import { Form, useLocation } from "@remix-run/react";
@@ -30,13 +30,8 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
 
   const handleNoteChange = (field: "title" | "content", value: string) => {
-    if (selectedNote) {
-      const updatedNote = { ...selectedNote, [field]: value };
-      setSelectedNote(updatedNote);
-      setNotes(
-        notes.map((note) => (note.id === selectedNote.id ? updatedNote : note)),
-      );
-    }
+    const updatedNote = { ...selectedNote, [field]: value };
+    setSelectedNote(updatedNote);
   };
 
   const filteredNotes = notesData.filter(
@@ -126,21 +121,34 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
       </div>
       <div className="flex-1 p-4">
         {selectedNote ? (
-          <>
-            <Input
-              value={selectedNote.title}
-              onChange={(e) => handleNoteChange("title", e.target.value)}
-              className="mb-4 text-xl font-bold"
-              readOnly={!isEditing}
-            />
+          <Form method="PATCH">
+            <div className="flex gap-16">
+              <Input
+                value={selectedNote.title || ""}
+                onChange={(e) => handleNoteChange("title", e.target.value)}
+                className="mb-4 text-xl font-bold"
+                name="newTitle"
+              />
+              <Button color="default">
+                <BookCopy />
+                Update
+              </Button>
+            </div>
             <Textarea
               value={selectedNote.content ?? "Enter Text..."}
               onChange={(e) => handleNoteChange("content", e.target.value)}
               className="h-full min-h-[400px] resize-none"
               placeholder="Start typing your note here..."
-              readOnly={!isEditing}
+              name="newContent"
             />
-          </>
+            <input
+              type="number"
+              hidden
+              readOnly
+              value={selectedNote.id}
+              name="noteId"
+            />
+          </Form>
         ) : (
           <div className="flex h-full items-center justify-center text-gray-400">
             Select a note or create a new one
