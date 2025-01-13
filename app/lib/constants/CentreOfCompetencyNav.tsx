@@ -1,7 +1,7 @@
 export const navItems = [
   {
     title: "Fundamentals",
-    href: "/fundamentals",
+    href: "/Fundamentals",
     subItems: [
       "Market Types & Structures",
       "Valuation Techniques",
