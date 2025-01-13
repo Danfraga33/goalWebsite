@@ -99,6 +99,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
                       size="icon"
                       className="flex"
                       type="submit"
+                      onClick={() => setSelectedNote(null)}
                     >
                       <CircleX color="red" />
                     </Button>
@@ -121,34 +122,36 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
       </div>
       <div className="flex-1 p-4">
         {selectedNote ? (
-          <Form method="PATCH">
-            <div className="flex gap-16">
-              <Input
-                value={selectedNote.title || ""}
-                onChange={(e) => handleNoteChange("title", e.target.value)}
-                className="mb-4 text-xl font-bold"
-                name="newTitle"
+          <>
+            <Form method="PATCH">
+              <div className="flex gap-16">
+                <Input
+                  value={selectedNote.title || ""}
+                  onChange={(e) => handleNoteChange("title", e.target.value)}
+                  className="mb-4 text-xl font-bold"
+                  name="newTitle"
+                />
+                <Button color="default">
+                  <BookCopy />
+                  Update
+                </Button>
+              </div>
+              <Textarea
+                value={selectedNote.content ?? "Enter Text..."}
+                onChange={(e) => handleNoteChange("content", e.target.value)}
+                className="h-full min-h-[400px] resize-none"
+                placeholder="Start typing your note here..."
+                name="newContent"
               />
-              <Button color="default">
-                <BookCopy />
-                Update
-              </Button>
-            </div>
-            <Textarea
-              value={selectedNote.content ?? "Enter Text..."}
-              onChange={(e) => handleNoteChange("content", e.target.value)}
-              className="h-full min-h-[400px] resize-none"
-              placeholder="Start typing your note here..."
-              name="newContent"
-            />
-            <input
-              type="number"
-              hidden
-              readOnly
-              value={selectedNote.id}
-              name="noteId"
-            />
-          </Form>
+              <input
+                type="number"
+                hidden
+                readOnly
+                value={selectedNote.id}
+                name="noteId"
+              />
+            </Form>
+          </>
         ) : (
           <div className="flex h-full items-center justify-center text-gray-400">
             Select a note or create a new one
