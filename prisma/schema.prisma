@@ -28,6 +28,11 @@ model User {
   Topics           Topic[]
 }
 
+model Study {
+  id    Int    @id @default(autoincrement())
+  title String
+}
+
 model WeeklySchedule {
   id          Int         @id @default(autoincrement())
   day         DaysOfWeeks
