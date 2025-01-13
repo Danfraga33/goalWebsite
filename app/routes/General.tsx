@@ -1,11 +1,11 @@
 import Sidebar from "~/components/sidebar";
 import PageTitle from "~/components/PageTitle";
-import WeeklyPlanner from "~/components/WeeklyPlanner";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { db } from "~/lib/db/db";
 import { DaysOfWeeks } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import Journal from "~/components/Journal";
+import { Separator } from "~/components/ui/separator";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const dailyTasks = await db.weeklySchedule.findMany({
@@ -86,17 +86,16 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function General() {
-  const { dailyTasks, journalEntries, allNotes } =
-    useLoaderData<typeof loader>();
+  const { journalEntries } = useLoaderData<typeof loader>();
 
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <div className="flex items-center justify-between">
-          <PageTitle>Weekly Planner</PageTitle>
+          <PageTitle>Dashboard</PageTitle>
         </div>
-        <WeeklyPlanner dailyTasks={dailyTasks} />
-        {/* Parell routing is the only option */}
+        <Separator />
+
         <Journal journalEntries={journalEntries} />
       </div>
     </Sidebar>
