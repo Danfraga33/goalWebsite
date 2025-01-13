@@ -119,6 +119,7 @@ enum NoteCategory {
   WeeklySchedule
   Journal
   DeepDive
+  Centre
 }
 
 enum DaysOfWeeks {
