@@ -23,8 +23,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const competencyNotes = await db.note.findMany({
     where: { category: pageCategory as NoteCategory },
   });
+  const listOfStudies = await db.study.findMany({});
 
-  return json({ competencyNotes });
+  return json({ competencyNotes, listOfStudies });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -97,9 +98,7 @@ export default function IndustryInsightsDashboard() {
   const [studies, setStudies] = useState(["AI Insights"]);
   const [selectedStudy, setSelectedStudy] = useState("AI Insights");
 
-  const { competencyNotes } = useLoaderData<typeof loader>();
-  console.log(competencyNotes);
-
+  const { listOfStudies, competencyNotes } = useLoaderData<typeof loader>();
   const addStudy = () => {
     const newStudy = `Study ${studies.length + 1}`;
     setStudies([...studies, newStudy]);
@@ -162,7 +161,7 @@ export default function IndustryInsightsDashboard() {
               </NavigationMenuList>
             </NavigationMenu>
             <StudySelector
-              studies={studies}
+              studies={listOfStudies}
               selectedStudy={selectedStudy}
               onSelectStudy={setSelectedStudy}
               onAddStudy={addStudy}
