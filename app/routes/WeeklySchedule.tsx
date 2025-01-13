@@ -15,7 +15,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   if (!dailyTasks) throw new Response("Not Found", { status: 404 });
-  return json({ dailyTasks });
+  return json({ dailyTasks, weeklyJournal });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -36,9 +36,8 @@ export async function action({ request }: ActionFunctionArgs) {
         return { error };
       }
       break;
-    case "post":
+    case "POST":
       const time = formData.get("time") as string;
-      console.log(time);
       const day = formData.get("day") as DaysOfWeeks;
       const description = formData.get("description") as string;
       const addDailyTask = await db.weeklySchedule.create({
@@ -68,7 +67,7 @@ export default function WeeklySchedule() {
           <PageTitle>Weekly Planner</PageTitle>
         </div>
         <WeeklyPlanner dailyTasks={dailyTasks} />
-        {/* <Evernote notesData={dailyTasks} /> */}
+        {/* <Evernote notesData={weeklyJournal} /> */}
       </div>
     </Sidebar>
   );
