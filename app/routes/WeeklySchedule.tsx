@@ -15,7 +15,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   if (!dailyTasks) throw new Response("Not Found", { status: 404 });
-  return json({ dailyTasks, weeklyJournal });
+  return json({ dailyTasks });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
