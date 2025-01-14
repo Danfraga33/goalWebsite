@@ -22,7 +22,7 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Calendar } from "./ui/calendar";
 import { Form, useLocation } from "@remix-run/react";
-import { CircleX, File } from "lucide-react";
+import { CircleX, File, Plus } from "lucide-react";
 import { JobApplication } from "@prisma/client";
 import { Checkbox } from "./ui/checkbox";
 
@@ -124,7 +124,10 @@ const JobApplicationTable = ({
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Open</Button>
+          <Button>
+            <Plus />
+            Add
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
