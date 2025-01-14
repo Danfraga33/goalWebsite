@@ -18,7 +18,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
-import DeleteNote from "./DeleteNote";
 import { Button } from "./ui/button";
 
 const Evernote = ({ notesData }: { notesData: Note[] }) => {

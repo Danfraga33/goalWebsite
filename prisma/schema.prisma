@@ -14,18 +14,35 @@ datasource db {
 }
 
 model User {
-  id               Int             @id @default(autoincrement())
-  email            String          @unique
+  id               Int              @id @default(autoincrement())
+  email            String           @unique
   name             String?
   Notes            Note[]
   StudyNotes       StudyNotes[]
   NavCategory      NavCategory[]
   NavItem          NavItem[]
   JournalEntry     JournalEntry[]
-  WeeklySchedule   WeeklySchedule? @relation(fields: [weeklyScheduleId], references: [id])
+  WeeklySchedule   WeeklySchedule?  @relation(fields: [weeklyScheduleId], references: [id])
   weeklyScheduleId Int?
   DailyTask        DailyTask[]
   Topics           Topic[]
+  JobApplication   JobApplication[]
+}
+
+model JobApplication {
+  id             Int      @id @default(autoincrement())
+  Applied        Boolean? @default(false)
+  Company        String
+  ConnectionSent Boolean? @default(false)
+  Connected      Boolean? @default(false)
+  WebsiteApply   Boolean? @default(false)
+  Referral       Boolean? @default(false)
+  EasyApply      Boolean? @default(false)
+  Status         Boolean? @default(false)
+  Notes          String?  @default("No Notes")
+  Date           String
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model Study {
