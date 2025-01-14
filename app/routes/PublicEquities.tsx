@@ -4,7 +4,7 @@ import Evernote from "~/components/Evernote";
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
-import { getPageCategory } from "~/utils/pageUtils";
+import { getPageCategory, getParentPath } from "~/utils/pageUtils";
 import { useLoaderData } from "@remix-run/react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -22,6 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const pageCategory = getPageCategory(request.url);
+  const parentCategory = getParentPath(pageCategory);
   switch (request.method) {
     case "POST":
       const addNote = await db.note.create({
@@ -55,7 +56,28 @@ export async function action({ request }: ActionFunctionArgs) {
           { status: 404 },
         );
       }
-      break;
+    case "PATCH":
+      const newTitle = formData.get("newTitle") as string;
+      const newContent = formData.get("newContent") as string;
+      const selectedNoteId = formData.get("noteId");
+      console.log(pageCategory);
+
+      console.log("UPDATING...");
+      try {
+        const updatedNote = await db.note.update({
+          where: {
+            id: Number(selectedNoteId),
+          },
+          data: {
+            title: newTitle,
+            content: newContent,
+            category: pageCategory as NoteCategory,
+          },
+        });
+        return { success: true, updatedNote };
+      } catch (error) {
+        console.error("Error updating note", error.message);
+      }
     default:
       return null;
       break;
