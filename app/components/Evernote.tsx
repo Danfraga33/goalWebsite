@@ -116,7 +116,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
               </div>
             ))
           ) : (
-            <p>Add a note...</p>
+            <p className="px-2">Add a note...</p>
           )}
         </ScrollArea>
       </div>
