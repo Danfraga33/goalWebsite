@@ -32,7 +32,7 @@ const Header = () => {
         <div className="flex items-center justify-center gap-2">
           <ModeToggle />
           <Link
-            to="/Dashboard"
+            to="/General"
             className="rounded-md bg-primary px-4 py-2 text-white transition-colors hover:bg-primary/90 dark:text-black"
           >
             Get Started
