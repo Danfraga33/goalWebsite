@@ -71,6 +71,13 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                         readOnly
                         name="activityId"
                       />
+                      <input
+                        type="text"
+                        value="weekSchedule"
+                        hidden
+                        readOnly
+                        name="intent"
+                      />
                     </Form>
                   </div>
                 ))}
