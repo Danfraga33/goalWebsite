@@ -14,19 +14,18 @@ datasource db {
 }
 
 model User {
-  id               Int              @id @default(autoincrement())
-  email            String           @unique
-  name             String?
-  Notes            Note[]
-  StudyNotes       StudyNotes[]
-  NavCategory      NavCategory[]
-  NavItem          NavItem[]
-  JournalEntry     JournalEntry[]
-  WeeklySchedule   WeeklySchedule?  @relation(fields: [weeklyScheduleId], references: [id])
-  weeklyScheduleId Int?
-  DailyTask        DailyTask[]
-  Topics           Topic[]
-  JobApplication   JobApplication[]
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  name           String?
+  Notes          Note[]
+  StudyNotes     StudyNotes[]
+  NavCategory    NavCategory[]
+  NavItem        NavItem[]
+  JournalEntry   JournalEntry[]
+  WeeklySchedule WeeklySchedule?
+  DailyTask      DailyTask[]
+  Topics         Topic[]
+  JobApplication JobApplication[]
 }
 
 model JobApplication {
@@ -55,8 +54,8 @@ model WeeklySchedule {
   day         DaysOfWeeks
   time        String
   description String
-  userId      Int
-  user        User[]
+  userId      Int         @unique
+  user        User        @relation(fields: [userId], references: [id])
 }
 
 model DailyTask {
