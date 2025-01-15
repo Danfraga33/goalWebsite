@@ -35,7 +35,6 @@ export async function action({ request }: ActionFunctionArgs) {
       });
 
       return { success: true, addNote };
-      break;
     case "DELETE":
       const id = formData.get("noteId");
       console.log("deleting...");
