@@ -19,8 +19,8 @@ const AddNote = () => {
     <Popover>
       <PopoverTrigger className="flex items-center" asChild>
         <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          New Note
+          <PlusCircle className="md:h-4 md:w-4" />
+          <span className="hidden lg:block">New Note</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -29,7 +29,7 @@ const AddNote = () => {
             <h4 className="font-medium leading-none">New Note</h4>
             <p className="text-sm text-muted-foreground">Create a new note</p>
           </div>
-          <Form method="post" action={`/${pageCategory}`}>
+          <Form method="POST" action={`/${pageCategory}`}>
             <div className="grid gap-2">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="title">Title</Label>
@@ -49,7 +49,9 @@ const AddNote = () => {
                   className="col-span-2 h-8"
                 />
               </div>
-              <Button>Submit</Button>
+              <Button name="intent" value="addNote">
+                Submit
+              </Button>
             </div>
           </Form>
         </div>
