@@ -18,7 +18,7 @@ const AddNav = () => {
       <DropdownMenuTrigger asChild>
         <Button>
           <Plus />
-          Add
+          <span className="hidden">Add</span>
         </Button>
       </DropdownMenuTrigger>
 

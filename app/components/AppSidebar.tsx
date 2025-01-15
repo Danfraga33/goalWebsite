@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd } from "lucide-react";
+import { ArrowBigDown, Circle, GalleryVerticalEnd } from "lucide-react";
 
 import {
   Sidebar,
@@ -60,6 +60,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                 <div>
                   <SidebarMenuButton asChild>
                     <Link to={item.url} className="font-medium">
+                      <Circle color="blue" />
                       {item.title}
                     </Link>
                   </SidebarMenuButton>
