@@ -11,6 +11,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const notes = await db.note.findMany({
     where: {
+      userId: 1,
       category: pageCategory as NoteCategory,
     },
   });
@@ -22,7 +23,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const pageCategory = getPageCategory(request.url);
-  const parentCategory = getParentPath(pageCategory);
   switch (request.method) {
     case "POST":
       const addNote = await db.note.create({
