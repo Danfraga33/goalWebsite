@@ -9,10 +9,10 @@ export const NavData = {
           url: "/Dashboard",
           isActive: false,
         },
-        { title: "General", url: "/Education", isActive: true },
+        { title: "General", url: "/General", isActive: true },
         { title: "Journal", url: "/Journal", isActive: true },
         { title: "Weekly Schedule", url: "/WeeklySchedule", isActive: true },
-        { title: "Deep Dive", url: "/DeepDive", isActive: true },
+        { title: "Deep Dive", url: "/Centre", isActive: true },
       ],
     },
     {
