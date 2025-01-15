@@ -35,6 +35,24 @@ export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   if (intent === "weekSchedule") {
     switch (request.method) {
+      case "POST":
+        const time = formData.get("time") as string;
+        const day = formData.get("day") as DaysOfWeeks;
+        const description = formData.get("description") as string;
+        try {
+          const addWeeklyActivity = await db.weeklySchedule.create({
+            data: {
+              userId: 1,
+              day,
+              time,
+              description,
+            },
+          });
+          return { success: true, addWeeklyActivity };
+        } catch (error) {
+          console.error("Error:", error);
+          return error;
+        }
       case "DELETE":
         try {
           console.log("Destroying...");
@@ -47,20 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
         } catch (error) {
           return { error };
         }
-      case "POST":
-        const time = formData.get("time") as string;
-        const day = formData.get("day") as DaysOfWeeks;
-        const description = formData.get("description") as string;
-        const addDailyTask = await db.weeklySchedule.create({
-          data: {
-            userId: 1,
-            day,
-            time,
-            description,
-          },
-        });
-        console.log({ day, time, description });
-        return { success: true, addDailyTask };
+
       default:
         return null;
     }
@@ -78,7 +83,10 @@ export async function action({ request }: ActionFunctionArgs) {
           });
 
           return { success: true, addNote };
-        } catch (error) {}
+        } catch (error) {
+          console.log(error);
+        }
+        break;
       case "DELETE":
         const id = formData.get("noteId");
         console.log("deleting...");

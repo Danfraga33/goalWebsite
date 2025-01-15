@@ -22,7 +22,7 @@ model User {
   NavCategory    NavCategory[]
   NavItem        NavItem[]
   JournalEntry   JournalEntry[]
-  WeeklySchedule WeeklySchedule?
+  WeeklySchedule WeeklySchedule[]
   DailyTask      DailyTask[]
   Topics         Topic[]
   JobApplication JobApplication[]

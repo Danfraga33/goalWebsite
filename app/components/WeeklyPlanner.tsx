@@ -55,7 +55,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       <p className="text-sm">{activity.description}</p>
                     </div>
 
-                    <Form method="DELETE" action={pageCategory}>
+                    <Form method="DELETE">
                       <Button
                         variant="secondary"
                         size="icon"
@@ -73,7 +73,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       />
                       <input
                         type="text"
-                        value="weekScheduler"
+                        value="weekSchedule"
                         hidden
                         readOnly
                         name="intent"
@@ -137,6 +137,13 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                           value={selectedDay}
                           name="day"
                           onChange={() => null}
+                        />
+                        <input
+                          type="text"
+                          value="weekSchedule"
+                          hidden
+                          readOnly
+                          name="intent"
                         />
                       </div>
                     </div>
