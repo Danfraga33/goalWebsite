@@ -26,7 +26,7 @@ const DeleteNote = ({ noteId }: { noteId: number }) => {
             <Trash2 className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent aria-description="Deleting">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>

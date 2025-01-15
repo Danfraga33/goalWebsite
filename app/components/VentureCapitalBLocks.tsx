@@ -40,7 +40,10 @@ const VentureCapitalBLocks = () => {
                   View Details
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent
+                aria-description="Adding a venture"
+                className="sm:max-w-[425px]"
+              >
                 <DialogHeader>
                   <DialogTitle>{selectedStartup?.name}</DialogTitle>
                 </DialogHeader>

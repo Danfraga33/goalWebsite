@@ -27,7 +27,10 @@ const NewSaaSPlanButton = () => {
           Plan a new project
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        aria-description="Adding a Project"
+        className="sm:max-w-[425px]"
+      >
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>

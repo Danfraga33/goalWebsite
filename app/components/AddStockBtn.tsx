@@ -69,7 +69,7 @@ const AddStock = () => {
       <DialogTrigger>
         <Button>Add New Stock</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-description="Adding a stock">
         <DialogHeader>
           <DialogTitle>Add New Stock</DialogTitle>
         </DialogHeader>

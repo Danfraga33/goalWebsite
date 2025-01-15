@@ -82,7 +82,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                   </div>
                 ))}
               </ScrollArea>
-              <Dialog>
+              <Dialog aria-description="Adding a weekly">
                 <DialogTrigger asChild>
                   <Button
                     className="mt-2 w-full"
@@ -91,7 +91,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                     Add Activity
                   </Button>
                 </DialogTrigger>
-                <DialogContent aria-description={undefined}>
+                <DialogContent aria-description="Adding a weekly activity">
                   <DialogHeader>
                     <DialogTitle>Add Activity for {selectedDay}</DialogTitle>
                   </DialogHeader>

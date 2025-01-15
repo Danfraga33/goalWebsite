@@ -103,7 +103,7 @@ export default function GoalSetting() {
                       <Edit className="h-4 w-4" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent aria-description="Creating a goal">
                     <DialogHeader>
                       <DialogTitle>Edit Column</DialogTitle>
                     </DialogHeader>
