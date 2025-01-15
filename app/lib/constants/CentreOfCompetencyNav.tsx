@@ -4,9 +4,12 @@ export const navItems = [
     href: "/Fundamentals",
     active: true, // Set this to true to make it active
     subItems: [
-      "Market Types & Structures",
-      "Valuation Techniques",
-      "Risk Assessment Methods",
+      "Introduction to AI",
+      "Supervised Learning",
+      "Unsupervised Learning",
+      "Natural Language Processing (NLP)",
+      "ML Fundamentals",
+      "Reinforcement Learning",
     ],
   },
   {

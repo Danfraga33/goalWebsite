@@ -1,8 +1,8 @@
-import { Outlet, json, redirect, useLoaderData } from "@remix-run/react";
+import { Outlet, json, useLoaderData } from "@remix-run/react";
 
 import { useState } from "react";
 import { db } from "~/lib/db/db";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
 import { getPageCategory, getParentPath } from "~/utils/pageUtils";
 import CentreNavTop from "~/components/CentreNavTop";
@@ -14,87 +14,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const competencyNotes = await db.note.findMany({
     where: { category: parentCategory as NoteCategory },
   });
-  const listOfStudies = await db.study.findMany({});
 
-  return json({ competencyNotes, listOfStudies });
+  const studyCategory = await db.studyCategory.findMany({
+    where: {
+      userId: 1,
+    },
+    include: {
+      subCategories: true,
+    },
+  });
+  console.log(studyCategory);
+
+  return json({ competencyNotes, studyCategory });
 }
 
-// export async function action({ request }: ActionFunctionArgs) {
-//   const pageCategory = getPageCategory(request.url);
-//   const parentCategory = getParentPath(pageCategory);
-//   const formData = await request.formData();
-//   const title = formData.get("title") as string;
-//   const content = formData.get("content") as string;
-//   switch (request.method) {
-//     case "POST":
-//       console.log("Creating...");
-
-//       try {
-//         const addNote = await db.note.create({
-//           data: {
-//             userId: 1,
-//             category: parentCategory as NoteCategory,
-//             title,
-//             content,
-//           },
-//         });
-//         return { success: true, addNote };
-//       } catch (error) {
-//         throw new Error(error.message);
-//       }
-//     case "DELETE":
-//       const id = formData.get("noteId");
-//       try {
-//         const deleteNote = await db.note.delete({
-//           where: {
-//             id: Number(id),
-//           },
-//         });
-//         return {
-//           success: true,
-//           message: "Sucessfully Deleted Not",
-//           deleteNote,
-//         };
-//       } catch (error) {
-//         return json(
-//           { error: "Unsuccessfull attempt to delete the note" },
-//           { status: 404 },
-//         );
-//       }
-//     case "PATCH":
-//       const newTitle = formData.get("newTitle") as string;
-//       const newContent = formData.get("newContent") as string;
-//       const selectedNoteId = formData.get("noteId");
-
-//       console.log("NESTED:", "UPDATING...");
-//       try {
-//         const updatedNote = await db.note.update({
-//           where: {
-//             id: Number(selectedNoteId),
-//           },
-//           data: {
-//             title: newTitle,
-//             content: newContent,
-//             category: pageCategory as NoteCategory,
-//           },
-//         });
-//         console.log("Success");
-
-//         return { success: true, updatedNote };
-//       } catch (error) {
-//         throw new Response("Unable to update", { status: 404 }, error.message);
-//       }
-//     default:
-//       console.log("addStudy");
-//       return null;
-//       break;
-//   }
-// }
-
 export default function CentreIndex() {
+  const { studyCategory } = useLoaderData<typeof loader>();
   const [studies, setStudies] = useState(["AI Insights"]);
-  const [selectedStudy, setSelectedStudy] = useState("AI Insights");
-  const { listOfStudies } = useLoaderData<typeof loader>();
+  const [selectedStudy, setSelectedStudy] = useState("Artificial Intelligence");
 
   const addStudy = () => {
     const newStudy = `Study ${studies.length + 1}`;
@@ -114,7 +51,7 @@ export default function CentreIndex() {
     <div className="flex flex-col items-center justify-center gap-6 p-2">
       <div className="flex min-h-screen flex-col">
         <CentreNavTop
-          listOfStudies={listOfStudies}
+          listOfStudies={studyCategory}
           selectedStudy={selectedStudy}
           setSelectedStudy={setSelectedStudy}
           addStudy={addStudy}

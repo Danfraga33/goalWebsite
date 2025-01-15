@@ -79,12 +79,22 @@ export async function action({ request }: ActionFunctionArgs) {
     default:
       console.log("addStudy");
       return null;
-      break;
   }
 }
 export default function Fundamentals() {
   const selectedStudy: string = useOutletContext();
-  const { competencyNotes } = useRouteLoaderData("routes/centre");
+  const { competencyNotes, studyCategory } =
+    useRouteLoaderData("routes/centre");
+
+  const filterNotes = studyCategory.filter((category) => {
+    return category.title === selectedStudy;
+  });
+  const subCategoryData = filterNotes
+    .filter((category) => {
+      return category.subCategories;
+    })
+    .map((category) => category.subCategories)
+    .flat();
 
   return (
     <div className="container flex justify-center py-6">
@@ -93,34 +103,11 @@ export default function Fundamentals() {
           Industry Insights Dashboard: {selectedStudy}
         </h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <DashboardCard title="Introduction to AI">
-            <p>An overview of AI, its history, and its key applications.</p>
-          </DashboardCard>
-          <DashboardCard title="Supervised Learning">
-            <p>
-              Learn how models are trained on labeled data to make predictions.
-            </p>
-          </DashboardCard>
-          <DashboardCard title="Unsupervised Learning">
-            <p>
-              Explore how models find patterns and structure in unlabeled data.
-            </p>
-          </DashboardCard>
-          <DashboardCard title="Natural Language Processing (NLP)">
-            <p>
-              Understand the methods for enabling machines to process human
-              language.
-            </p>
-          </DashboardCard>
-          <DashboardCard title="ML Fundamentals">
-            <p>Dive into essential machine learning concepts and techniques.</p>
-          </DashboardCard>
-          <DashboardCard title="Reinforcement Learning">
-            <p>
-              Study how agents learn to make decisions by interacting with their
-              environment.
-            </p>
-          </DashboardCard>
+          {subCategoryData.map((category) => (
+            <DashboardCard title={category.title ?? "asd"} key={category.id}>
+              <p>{category.description ?? ""}</p>
+            </DashboardCard>
+          ))}
         </div>
 
         <div className="py-4">

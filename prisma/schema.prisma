@@ -26,6 +26,7 @@ model User {
   DailyTask      DailyTask[]
   Topics         Topic[]
   JobApplication JobApplication[]
+  StudyCategory  StudyCategory[]
 }
 
 model JobApplication {
@@ -42,6 +43,23 @@ model JobApplication {
   Date           String
   userId         Int
   user           User     @relation(fields: [userId], references: [id])
+}
+
+model StudyCategory {
+  id            Int           @id @default(autoincrement())
+  title         String
+  subCategories SubCategory[] @relation("CategorySubCategories")
+  user          User          @relation(fields: [userId], references: [id])
+  userId        Int           @default(1)
+}
+
+model SubCategory {
+  id                Int           @id @default(autoincrement())
+  title             String
+  description       String
+  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id]) // Referencing "StudyCategory" correctly
+  studyCategoryId   Int
+  studyCategoryName String
 }
 
 model Study {

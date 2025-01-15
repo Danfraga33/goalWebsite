@@ -20,7 +20,7 @@ const CentreNavTop = ({
   removeStudy,
 }: {
   listOfStudies: Study[];
-  selectedStudy: string[];
+  selectedStudy: string;
   setSelectedStudy: Dispatch<React.SetStateAction<string>>;
   addStudy: () => void;
   removeStudy: (study: string) => void;
