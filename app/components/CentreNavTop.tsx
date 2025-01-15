@@ -11,7 +11,7 @@ import { EllipsisVertical, Home } from "lucide-react";
 import { StudySelector } from "~/components/studySelection";
 import { navItems } from "~/lib/constants/CentreOfCompetencyNav";
 import { Study } from "@prisma/client";
-import { Dispatch, ReactNode } from "react";
+import { Dispatch } from "react";
 const CentreNavTop = ({
   listOfStudies,
   selectedStudy,
@@ -20,7 +20,7 @@ const CentreNavTop = ({
   removeStudy,
 }: {
   listOfStudies: Study[];
-  selectedStudy: string;
+  selectedStudy: Study;
   setSelectedStudy: Dispatch<React.SetStateAction<string>>;
   addStudy: () => void;
   removeStudy: (study: string) => void;
