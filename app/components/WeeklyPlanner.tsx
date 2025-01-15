@@ -73,7 +73,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       />
                       <input
                         type="text"
-                        value="weekSchedule"
+                        value="weekScheduler"
                         hidden
                         readOnly
                         name="intent"
@@ -91,7 +91,7 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                     Add Activity
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent aria-description={undefined}>
                   <DialogHeader>
                     <DialogTitle>Add Activity for {selectedDay}</DialogTitle>
                   </DialogHeader>

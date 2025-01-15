@@ -64,19 +64,26 @@ export async function action({ request }: ActionFunctionArgs) {
       default:
         return null;
     }
-  } else {
+  } else if (intent !== "weekSchedule") {
     switch (request.method) {
       case "POST":
-        const addNote = await db.note.create({
-          data: {
-            userId: 1,
-            category: pageCategory as NoteCategory,
-            title: formData.get("title") as string,
-            content: formData.get("content") as string,
-          },
-        });
+        console.log("Adding");
 
-        return { success: true, addNote };
+        try {
+          const addNote = await db.note.create({
+            data: {
+              userId: 1,
+              category: pageCategory as NoteCategory,
+              title: formData.get("title") as string,
+              content: formData.get("content") as string,
+            },
+          });
+          console.log("Added");
+
+          return { success: true, message: "Aasdas", addNote };
+        } catch (error) {
+          return { Error: error.message, status: 404 };
+        }
       case "DELETE":
         const id = formData.get("noteId");
         console.log("deleting...");
