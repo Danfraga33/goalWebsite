@@ -64,11 +64,9 @@ export async function action({ request }: ActionFunctionArgs) {
       default:
         return null;
     }
-  } else if (intent !== "weekSchedule") {
+  } else {
     switch (request.method) {
       case "POST":
-        console.log("Adding");
-
         try {
           const addNote = await db.note.create({
             data: {
@@ -78,12 +76,9 @@ export async function action({ request }: ActionFunctionArgs) {
               content: formData.get("content") as string,
             },
           });
-          console.log("Added");
 
-          return { success: true, message: "Aasdas", addNote };
-        } catch (error) {
-          return { Error: error.message, status: 404 };
-        }
+          return { success: true, addNote };
+        } catch (error) {}
       case "DELETE":
         const id = formData.get("noteId");
         console.log("deleting...");
