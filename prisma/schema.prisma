@@ -142,6 +142,7 @@ enum NoteCategory {
   Journal
   DeepDive
   Centre
+  Fundamentals
 }
 
 enum DaysOfWeeks {
