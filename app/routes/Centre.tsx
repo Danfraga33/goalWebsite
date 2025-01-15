@@ -44,7 +44,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 //       }
 //     case "DELETE":
 //       const id = formData.get("noteId");
-//       console.log("deleting...");
 //       try {
 //         const deleteNote = await db.note.delete({
 //           where: {
