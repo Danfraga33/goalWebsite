@@ -20,7 +20,6 @@ const AddNote = () => {
       <PopoverTrigger className="flex items-center" asChild>
         <Button>
           <PlusCircle className="md:h-4 md:w-4" />
-          <span className="hidden xl:block">New</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
