@@ -13,7 +13,7 @@ import { Study } from "@prisma/client";
 
 interface StudySelectorProps {
   studies: Study[];
-  selectedStudy: Study;
+  selectedStudy: string[];
   onSelectStudy: (study: string) => void;
   onAddStudy: () => void;
   onRemoveStudy: (study: string) => void;
@@ -26,11 +26,13 @@ export function StudySelector({
   onAddStudy,
   onRemoveStudy,
 }: StudySelectorProps) {
+  console.log(selectedStudy);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {selectedStudy.title}
+          {selectedStudy}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>

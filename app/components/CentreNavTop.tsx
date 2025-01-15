@@ -20,11 +20,12 @@ const CentreNavTop = ({
   removeStudy,
 }: {
   listOfStudies: Study[];
-  selectedStudy: Study;
+  selectedStudy: string[];
   setSelectedStudy: Dispatch<React.SetStateAction<string>>;
   addStudy: () => void;
   removeStudy: (study: string) => void;
 }) => {
+  const filteredNav = navItems.filter((navItem) => navItem.active === true);
   return (
     <header className="sticky top-0 z-50 w-full gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-center">
@@ -35,7 +36,7 @@ const CentreNavTop = ({
               <Home />
             </Link>
             <EllipsisVertical />
-            {navItems.map((item) => (
+            {filteredNav.map((item) => (
               <NavigationMenuItem key={item.title}>
                 {item.subItems ? (
                   <NavigationMenuTrigger>
