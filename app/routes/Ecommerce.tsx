@@ -5,7 +5,7 @@ import Evernote from "~/components/Evernote";
 import { db } from "~/lib/db/db";
 import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { NoteCategory } from "@prisma/client";
-import { getPageCategory } from "~/utils/pageUtils";
+import { getPageCategory, getParentPath } from "~/utils/pageUtils";
 import { useLoaderData } from "@remix-run/react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -21,18 +21,66 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
-  const addNote = await db.note.create({
-    data: {
-      userId: 1,
-      category: pageCategory as NoteCategory,
-      title: formData.get("title") as string,
-      content: formData.get("content") as string,
-    },
-  });
+  const pageCategory = getPageCategory(request.url);
+  switch (request.method) {
+    case "POST":
+      const addNote = await db.note.create({
+        data: {
+          userId: 1,
+          category: pageCategory as NoteCategory,
+          title: formData.get("title") as string,
+          content: formData.get("content") as string,
+        },
+      });
 
-  return json({ success: true, addNote });
+      return { success: true, addNote };
+      break;
+    case "DELETE":
+      const id = formData.get("noteId");
+      console.log("deleting...");
+      try {
+        const deleteNote = await db.note.delete({
+          where: {
+            id: Number(id),
+          },
+        });
+        return {
+          success: true,
+          message: "Sucessfully Deleted Not",
+          deleteNote,
+        };
+      } catch (error) {
+        return json(
+          { error: "Unsuccessfull attempt to delete the note" },
+          { status: 404 },
+        );
+      }
+    case "PATCH":
+      const newTitle = formData.get("newTitle") as string;
+      const newContent = formData.get("newContent") as string;
+      const selectedNoteId = formData.get("noteId");
+
+      console.log("UPDATING...");
+      try {
+        const updatedNote = await db.note.update({
+          where: {
+            id: Number(selectedNoteId),
+          },
+          data: {
+            title: newTitle,
+            content: newContent,
+            category: pageCategory as NoteCategory,
+          },
+        });
+        return { success: true, updatedNote };
+      } catch (error) {
+        console.error("Error updating note", error.message);
+      }
+    default:
+      console.log("addStudy");
+      break;
+  }
 }
 
 const Ecommerce = () => {

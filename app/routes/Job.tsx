@@ -72,19 +72,16 @@ export async function action({ request }: ActionFunctionArgs) {
   } else {
     switch (request.method) {
       case "POST":
-        try {
-          const addNote = await db.note.create({
-            data: {
-              userId: 1,
-              category: pageCategory as NoteCategory,
-              title: formData.get("title") as string,
-              content: formData.get("content") as string,
-            },
-          });
-          return json({ success: true, addNote });
-        } catch (error) {
-          console.error(error.message);
-        }
+        const addNote = await db.note.create({
+          data: {
+            userId: 1,
+            category: pageCategory as NoteCategory,
+            title: formData.get("title") as string,
+            content: formData.get("content") as string,
+          },
+        });
+
+        return { success: true, addNote };
         break;
       case "DELETE":
         const id = formData.get("noteId");
@@ -106,8 +103,29 @@ export async function action({ request }: ActionFunctionArgs) {
             { status: 404 },
           );
         }
-        break;
+      case "PATCH":
+        const newTitle = formData.get("newTitle") as string;
+        const newContent = formData.get("newContent") as string;
+        const selectedNoteId = formData.get("noteId");
+
+        console.log("UPDATING...");
+        try {
+          const updatedNote = await db.note.update({
+            where: {
+              id: Number(selectedNoteId),
+            },
+            data: {
+              title: newTitle,
+              content: newContent,
+              category: pageCategory as NoteCategory,
+            },
+          });
+          return { success: true, updatedNote };
+        } catch (error) {
+          console.error("Error updating note", error.message);
+        }
       default:
+        console.log("addStudy");
         break;
     }
   }
