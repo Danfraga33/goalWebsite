@@ -17,7 +17,6 @@ import {
 const DeleteNote = ({ noteId }: { noteId: number }) => {
   const location = useLocation();
   const pageCategory = location.pathname;
-  console.log(pageCategory);
 
   return (
     <Form method="DELETE">

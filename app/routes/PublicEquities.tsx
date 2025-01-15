@@ -60,7 +60,6 @@ export async function action({ request }: ActionFunctionArgs) {
       const newTitle = formData.get("newTitle") as string;
       const newContent = formData.get("newContent") as string;
       const selectedNoteId = formData.get("noteId");
-      console.log(pageCategory);
 
       console.log("UPDATING...");
       try {
@@ -79,7 +78,7 @@ export async function action({ request }: ActionFunctionArgs) {
         console.error("Error updating note", error.message);
       }
     default:
-      return null;
+      console.log("addStudy");
       break;
   }
 }

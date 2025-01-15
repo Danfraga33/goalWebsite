@@ -6,27 +6,15 @@ import { useState } from "react";
 import { Badge } from "./ui/badge";
 import { Form, useLocation } from "@remix-run/react";
 import { ScrollArea } from "./ui/scroll-area";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "~/components/ui/alert-dialog";
 import { Note } from "~/lib/types/types";
 import AddNote from "./AddNote";
 import { Button } from "./ui/button";
+import { getParentPath } from "~/utils/pageUtils";
 
 const Evernote = ({ notesData }: { notesData: Note[] }) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
 
   const handleNoteChange = (field: "title" | "content", value: string) => {
     const updatedNote = { ...selectedNote, [field]: value };
@@ -44,7 +32,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
     return url.replace(/^\//, "");
   };
   const pageCategory = normalizeUrl(location.pathname);
-
+  const parentCategory = getParentPath(pageCategory);
   return (
     <Card className="flex h-full overflow-hidden">
       <div className="w-1/3 border-r border-gray-200 p-4">
@@ -52,7 +40,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">Notes</h3>
             <span>
-              <Badge>{pageCategory}</Badge>
+              <Badge>{parentCategory}</Badge>
             </span>
           </div>
 
@@ -110,7 +98,6 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
                       name="noteId"
                     />
                   </Form>
-                  {/* <DeleteNote noteId={note.id} /> */}
                 </div>
               </div>
             ))
