@@ -57,7 +57,7 @@ model SubCategory {
   id                Int           @id @default(autoincrement())
   title             String
   description       String
-  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id]) // Referencing "StudyCategory" correctly
+  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id]) 
   studyCategoryId   Int
   studyCategoryName String        @default("new Category")
 }
