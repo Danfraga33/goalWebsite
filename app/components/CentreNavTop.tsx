@@ -31,7 +31,7 @@ const CentreNavTop = ({
         {/* Center nav container */}
         <NavigationMenu>
           <NavigationMenuList>
-            <Link to="/Dashboard">
+            <Link to="/General">
               <Home />
             </Link>
             <EllipsisVertical />
