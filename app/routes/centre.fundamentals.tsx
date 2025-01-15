@@ -91,8 +91,6 @@ export default function Fundamentals() {
   const filteredNotes = competencyNotes.filter((note) => {
     return note.StudyName === selectedStudy;
   });
-  console.log(selectedStudy);
-  console.log(filteredNotes);
 
   const filterCategories = studyCategory.filter((category) => {
     return category.title === selectedStudy;
@@ -112,14 +110,14 @@ export default function Fundamentals() {
         </h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {subCategoryData.map((category) => (
-            <DashboardCard title={category.title ?? "asd"} key={category.id}>
+            <DashboardCard title={category.title} key={category.id}>
               <p>{category.description ?? ""}</p>
             </DashboardCard>
           ))}
         </div>
 
         <div className="py-4">
-          <Evernote notesData={filteredNotes} StudyName="asd" />
+          <Evernote notesData={filteredNotes} StudyName={selectedStudy} />
         </div>
       </div>
     </div>
