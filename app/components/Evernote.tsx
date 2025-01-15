@@ -40,7 +40,9 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">Notes</h3>
             <span>
-              <Badge className="hidden xl:block">{parentCategory}</Badge>
+              <Badge className="hidden text-xs xl:block">
+                {parentCategory}
+              </Badge>
             </span>
           </div>
 
