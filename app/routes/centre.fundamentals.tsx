@@ -86,10 +86,16 @@ export default function Fundamentals() {
   const { competencyNotes, studyCategory } =
     useRouteLoaderData("routes/centre");
 
-  const filterNotes = studyCategory.filter((category) => {
+  const filteredNotes = competencyNotes.filter((note) => {
+    return note.StudyName === selectedStudy;
+  });
+  console.log(selectedStudy);
+  console.log(filteredNotes);
+
+  const filterCategories = studyCategory.filter((category) => {
     return category.title === selectedStudy;
   });
-  const subCategoryData = filterNotes
+  const subCategoryData = filterCategories
     .filter((category) => {
       return category.subCategories;
     })
@@ -111,7 +117,7 @@ export default function Fundamentals() {
         </div>
 
         <div className="py-4">
-          <Evernote notesData={competencyNotes} />
+          <Evernote notesData={filteredNotes} />
         </div>
       </div>
     </div>

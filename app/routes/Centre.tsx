@@ -23,7 +23,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       subCategories: true,
     },
   });
-  console.log(studyCategory);
 
   return json({ competencyNotes, studyCategory });
 }

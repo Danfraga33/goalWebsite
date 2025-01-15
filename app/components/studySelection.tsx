@@ -26,8 +26,6 @@ export function StudySelector({
   onAddStudy,
   onRemoveStudy,
 }: StudySelectorProps) {
-  console.log(selectedStudy);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
