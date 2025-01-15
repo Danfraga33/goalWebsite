@@ -42,12 +42,7 @@ const AddNote = () => {
               </div>
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="content">Content</Label>
-                <Input
-                  id="content"
-                  name="content"
-                  defaultValue="Content..."
-                  className="col-span-2 h-8"
-                />
+                <Input id="content" name="content" className="col-span-2 h-8" />
               </div>
               <Button name="intent" value="addNote">
                 Submit

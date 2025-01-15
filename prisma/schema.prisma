@@ -59,7 +59,7 @@ model SubCategory {
   description       String
   studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id]) // Referencing "StudyCategory" correctly
   studyCategoryId   Int
-  studyCategoryName String
+  studyCategoryName String        @default("new Category")
 }
 
 model Study {
@@ -72,7 +72,7 @@ model WeeklySchedule {
   day         DaysOfWeeks
   time        String
   description String
-  userId      Int         @unique
+  userId      Int
   user        User        @relation(fields: [userId], references: [id])
 }
 
