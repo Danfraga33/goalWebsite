@@ -12,7 +12,7 @@ export const NavData = {
         { title: "General", url: "/General", isActive: true },
         { title: "Journal", url: "/Journal", isActive: true },
         { title: "Weekly Schedule", url: "/WeeklySchedule", isActive: true },
-        { title: "Deep Dive", url: "/Centre", isActive: true },
+        { title: "Centre", url: "/Centre/Fundamentals", isActive: true },
       ],
     },
     {
