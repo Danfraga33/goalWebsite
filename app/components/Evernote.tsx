@@ -11,7 +11,13 @@ import AddNote from "./AddNote";
 import { Button } from "./ui/button";
 import { getParentPath } from "~/utils/pageUtils";
 
-const Evernote = ({ notesData }: { notesData: Note[] }) => {
+const Evernote = ({
+  notesData,
+  StudyName,
+}: {
+  notesData: Note[];
+  StudyName?: string;
+}) => {
   const [notes, setNotes] = useState<Note[]>(notesData);
   const [selectedNote, setSelectedNote] = useState<Note | null>(notes[0]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,7 +52,7 @@ const Evernote = ({ notesData }: { notesData: Note[] }) => {
             </span>
           </div>
 
-          <AddNote />
+          <AddNote StudyName={StudyName} />
         </div>
         <div className="mb-4">
           <div className="relative">

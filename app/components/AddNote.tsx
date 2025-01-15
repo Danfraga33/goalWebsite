@@ -1,5 +1,6 @@
 import { Form, useLocation } from "@remix-run/react";
 import { PlusCircle } from "lucide-react";
+import { FC } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -9,7 +10,11 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-const AddNote = () => {
+interface AddNoteProps {
+  StudyName?: string;
+}
+
+const AddNote: FC<AddNoteProps> = ({ StudyName }) => {
   const location = useLocation();
   const normalizeUrl = (url: string) => {
     return url.replace(/^\//, "");
@@ -47,6 +52,13 @@ const AddNote = () => {
                 Submit
               </Button>
             </div>
+            <input
+              type="text"
+              value={StudyName}
+              hidden
+              readOnly
+              name="StudyName"
+            />
           </Form>
         </div>
       </PopoverContent>

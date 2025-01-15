@@ -18,6 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const content = formData.get("content") as string;
   switch (request.method) {
     case "POST":
+      const StudyName = formData.get("StudyName") as string;
       console.log("Creating...");
 
       try {
@@ -25,6 +26,7 @@ export async function action({ request }: ActionFunctionArgs) {
           data: {
             userId: 1,
             category: parentCategory as NoteCategory,
+            StudyName,
             title,
             content,
           },
@@ -117,7 +119,7 @@ export default function Fundamentals() {
         </div>
 
         <div className="py-4">
-          <Evernote notesData={filteredNotes} />
+          <Evernote notesData={filteredNotes} StudyName="asd" />
         </div>
       </div>
     </div>
