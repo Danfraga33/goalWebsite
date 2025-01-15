@@ -1,15 +1,90 @@
-import {
-  useMatches,
-  useOutletContext,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { NoteCategory } from "@prisma/client";
+import { ActionFunctionArgs } from "@remix-run/node";
+import { json, useOutletContext, useRouteLoaderData } from "@remix-run/react";
 import { DashboardCard } from "~/components/DashboardCard";
 import Evernote from "~/components/Evernote";
+import { db } from "~/lib/db/db";
+import {
+  getPageCategory,
+  getParentPath,
+  getSubCategory,
+} from "~/utils/pageUtils";
 
+export async function action({ request }: ActionFunctionArgs) {
+  const pageCategory = getPageCategory(request.url);
+  const parentCategory = getParentPath(pageCategory);
+  const formData = await request.formData();
+  const title = formData.get("title") as string;
+  const content = formData.get("content") as string;
+  switch (request.method) {
+    case "POST":
+      console.log("Creating...");
+
+      try {
+        const addNote = await db.note.create({
+          data: {
+            userId: 1,
+            category: parentCategory as NoteCategory,
+            title,
+            content,
+          },
+        });
+        return { success: true, addNote };
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    case "DELETE":
+      const id = formData.get("noteId");
+      console.log("deleting...");
+      try {
+        const deleteNote = await db.note.delete({
+          where: {
+            id: Number(id),
+          },
+        });
+        return {
+          success: true,
+          message: "Sucessfully Deleted Not",
+          deleteNote,
+        };
+      } catch (error) {
+        return json(
+          { error: "Unsuccessfull attempt to delete the note" },
+          { status: 404 },
+        );
+      }
+    case "PATCH":
+      const newTitle = formData.get("newTitle") as string;
+      const newContent = formData.get("newContent") as string;
+      const selectedNoteId = formData.get("noteId");
+      const subCategory = getSubCategory(pageCategory);
+      console.log(subCategory); //Fundamentals
+
+      console.log("NESTED UPDATING...");
+      try {
+        const updatedNote = await db.note.update({
+          where: {
+            id: Number(selectedNoteId),
+          },
+          data: {
+            title: newTitle,
+            content: newContent,
+          },
+        });
+        console.log("SUCCESS UPDATING");
+        return { success: true, updatedNote };
+      } catch (error) {
+        console.error("Error updating note", error.message);
+      }
+    default:
+      console.log("addStudy");
+      return null;
+      break;
+  }
+}
 export default function Fundamentals() {
   const selectedStudy: string = useOutletContext();
   const { competencyNotes } = useRouteLoaderData("routes/centre");
-  console.log(competencyNotes);
 
   return (
     <div className="container flex justify-center py-6">
