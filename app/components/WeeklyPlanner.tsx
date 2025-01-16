@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -23,8 +23,23 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
     time: "",
     description: "",
   });
-
   const [selectedDay, setSelectedDay] = useState<string>("Monday");
+
+  const sortedTasksByDay = useMemo(() => {
+    return daysOfWeek.reduce(
+      (acc, day) => {
+        acc[day] = dailyTasks
+          .filter((activity) => activity.day === day)
+          .sort((a, b) => {
+            const [hourA, minuteA] = a.time.split(":").map(Number);
+            const [hourB, minuteB] = b.time.split(":").map(Number);
+            return hourA * 60 + minuteA - (hourB * 60 + minuteB);
+          });
+        return acc;
+      },
+      {} as Record<string, WeeklySchedule[]>,
+    );
+  }, [dailyTasks]);
 
   const startDate = startOfWeek(new Date(), { weekStartsOn: 1 });
   const location = useLocation();
@@ -32,9 +47,19 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
       {daysOfWeek.map((day, index) => {
-        const dayActivities = dailyTasks.filter(
-          (activity) => activity.day === day,
-        );
+        const dayActivities = dailyTasks
+          .filter((activity) => activity.day === day)
+          .sort((a, b) => {
+            // Assuming time is in the format "HH:MM"
+            const timeA = a.time.split(":").map(Number);
+            const timeB = b.time.split(":").map(Number);
+
+            // Convert time to minutes since midnight for comparison
+            const minutesA = timeA[0] * 60 + timeA[1];
+            const minutesB = timeB[0] * 60 + timeB[1];
+
+            return minutesA - minutesB; // Sort in ascending order
+          });
         return (
           <Card key={day} className="flex flex-col">
             <CardHeader>
@@ -156,7 +181,6 @@ const WeeklyPlanner = ({ dailyTasks }: { dailyTasks: WeeklySchedule[] }) => {
                       readOnly
                     />
                   </Form>
-                  {/* <Button onClick={addActivity}>Add Activity</Button> */}
                 </DialogContent>
               </Dialog>
             </CardContent>
