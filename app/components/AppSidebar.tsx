@@ -44,7 +44,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   <GalleryVerticalEnd className="size-4" color="blue" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  The Flow
+                  The Feedback Companion
                 </div>
               </Link>
             </SidebarMenuButton>
