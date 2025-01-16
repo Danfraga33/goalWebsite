@@ -1,6 +1,7 @@
 import { NoteCategory } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { json, useOutletContext, useRouteLoaderData } from "@remix-run/react";
+import { AddCategory } from "~/components/AddCategoryCard";
 import { DashboardCard } from "~/components/DashboardCard";
 import Evernote from "~/components/Evernote";
 import { db } from "~/lib/db/db";
@@ -114,6 +115,8 @@ export default function Fundamentals() {
               <p>{category.description ?? ""}</p>
             </DashboardCard>
           ))}
+
+          {subCategoryData.length < 6 && <AddCategory />}
         </div>
 
         <div className="py-4">
