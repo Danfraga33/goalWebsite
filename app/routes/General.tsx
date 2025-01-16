@@ -2,101 +2,111 @@ import Sidebar from "~/components/sidebar";
 import PageTitle from "~/components/PageTitle";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { db } from "~/lib/db/db";
-import { DaysOfWeeks } from "@prisma/client";
+import { DaysOfWeeks, NoteCategory } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import Journal from "~/components/Journal";
 import { Separator } from "~/components/ui/separator";
+import Evernote from "~/components/Evernote";
+import { getPageCategory } from "~/utils/pageUtils";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const dailyTasks = await db.weeklySchedule.findMany({
+  const pageCategory = getPageCategory(request.url);
+
+  const generalNotes = await db.note.findMany({
     where: {
       userId: 1,
-    },
-  });
-  const journalEntries = await db.journalEntry.findMany({
-    where: {
-      userId: 1,
+      category: pageCategory as NoteCategory,
     },
   });
 
-  const allNotes = await db.note.findMany();
-
-  if (!dailyTasks) throw new Response("Not Found", { status: 404 });
-  return json({ dailyTasks, journalEntries, allNotes });
+  return json({ generalNotes });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const time = formData.get("time") as string;
-  const day = formData.get("day") as DaysOfWeeks;
-  const description = formData.get("description") as string;
-  const formType = formData.get("form") as string;
+  const pageCategory = getPageCategory(request.url);
 
-  switch (formType) {
-    case "weeklySchedule":
+  switch (request.method) {
+    case "POST":
       try {
-        const addDailyTask = await db.weeklySchedule.create({
+        console.log("creating...");
+        const addNoteData = await db.note.create({
           data: {
             userId: 1,
-            day,
-            time,
-            description,
+            category: pageCategory as NoteCategory,
+            title: formData.get("title") as string,
+            content: formData.get("content") as string,
           },
         });
-        return { success: true, addDailyTask };
+
+        return { success: true, addNoteData };
       } catch (error) {
-        throw new Error("Failed to add weekly task");
+        console.error("Error creating note:", error);
+
+        return {
+          success: false,
+          message: "Failed to create general note",
+          error,
+        };
       }
-
-    case "journal":
+    case "DELETE":
+      const id = formData.get("noteId");
+      console.log("deleting...");
       try {
-        const date = formData.get("date") as string;
-        const content = formData.get("content") as string;
-        const entryDate = new Date(date);
-        entryDate.setUTCHours(0, 0, 0, 0);
-        console.log(typeof entryDate);
-
-        const addJournalEntry = await db.journalEntry.upsert({
+        const deleteNote = await db.note.delete({
           where: {
-            userId_date: {
-              userId: 1,
-              date: entryDate,
-            },
-          },
-          update: {
-            content,
-          },
-          create: {
-            userId: 1,
-            date: entryDate,
-            content,
+            id: Number(id),
           },
         });
-
-        return { success: true, addJournalEntry };
+        return {
+          success: true,
+          message: "Sucessfully Deleted Not",
+          deleteNote,
+        };
       } catch (error) {
         return json(
-          { error: "An entry for this date already exists" },
+          { error: "Unsuccessfull attempt to delete the note" },
           { status: 404 },
         );
       }
+    case "PATCH":
+      const newTitle = formData.get("newTitle") as string;
+      const newContent = formData.get("newContent") as string;
+      const selectedNoteId = formData.get("noteId");
+
+      console.log("UPDATING...");
+      try {
+        const updatedNote = await db.note.update({
+          where: {
+            id: Number(selectedNoteId),
+          },
+          data: {
+            title: newTitle,
+            content: newContent,
+            category: pageCategory as NoteCategory,
+          },
+        });
+        return { success: true, updatedNote };
+      } catch (error) {
+        console.error("Error updating note", error.message);
+      }
     default:
+      console.log("Add Further");
       break;
   }
 }
 
 export default function General() {
-  const { journalEntries } = useLoaderData<typeof loader>();
+  const { generalNotes } = useLoaderData<typeof loader>();
 
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <div className="flex items-center justify-between">
-          <PageTitle>Dashboard</PageTitle>
+          <PageTitle>General</PageTitle>
         </div>
         <Separator />
-
-        <Journal journalEntries={journalEntries} />
+        <Evernote notesData={generalNotes} />
       </div>
     </Sidebar>
   );

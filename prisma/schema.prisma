@@ -150,6 +150,7 @@ model NavCategory {
 }
 
 enum NoteCategory {
+  General
   Flow
   IncomeOverview
   InvestOverview
