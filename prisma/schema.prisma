@@ -150,7 +150,6 @@ model NavCategory {
 }
 
 enum NoteCategory {
-  General
   Flow
   IncomeOverview
   InvestOverview
@@ -163,6 +162,7 @@ enum NoteCategory {
   Agency
   Dividends
   RentalIncome
+  General
   TaxStrategies
   PublicEquities
   RealEstate

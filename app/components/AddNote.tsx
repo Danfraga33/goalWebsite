@@ -19,7 +19,6 @@ const AddNote: FC<AddNoteProps> = ({ StudyName }) => {
   const normalizeUrl = (url: string) => {
     return url.replace(/^\//, "");
   };
-  console.log(StudyName);
   const pageCategory = normalizeUrl(location.pathname);
   return (
     <Popover>
