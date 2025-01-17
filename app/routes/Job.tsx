@@ -31,6 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const intent = formData.get("intent");
   const companyName = formData.get("companyName") as string;
+  const role = formData.get("role") as string;
   const applied = formData.get("applied") === "on";
   const connectionSent = formData.get("connectionSent") === "on";
   const connected = formData.get("connected") === "on";
@@ -50,6 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
             data: {
               userId: 1,
               Company: companyName,
+              Role: role,
               Applied: applied,
               ConnectionSent: connectionSent,
               Connected: connected,
@@ -81,6 +83,7 @@ export async function action({ request }: ActionFunctionArgs) {
               Applied: applied,
               ConnectionSent: connectionSent,
               Connected: connected,
+              Role: role,
               WebsiteApply: websiteApply,
               Referral: referral,
               EasyApply: easyApply,

@@ -33,6 +33,7 @@ model JobApplication {
   id             Int      @id @default(autoincrement())
   Applied        Boolean? @default(false)
   Company        String
+  Role           String   @default("Software Developer")
   ConnectionSent Boolean? @default(false)
   Connected      Boolean? @default(false)
   WebsiteApply   Boolean? @default(false)
@@ -57,7 +58,7 @@ model SubCategory {
   id                Int           @id @default(autoincrement())
   title             String
   description       String
-  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id]) 
+  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id])
   studyCategoryId   Int
   studyCategoryName String        @default("new Category")
 }
@@ -71,7 +72,7 @@ model Note {
   id        Int          @id @default(autoincrement())
   title     String
   category  NoteCategory
-  StudyName String? @default("General")
+  StudyName String?      @default("General")
   content   String?
   createdAt DateTime     @default(now())
   user      User         @relation(fields: [userId], references: [id])
@@ -183,8 +184,6 @@ enum DaysOfWeeks {
   Saturday
   Sunday
 }
-
-
 
 model StudyNotes {
   id      Int     @id @default(autoincrement())

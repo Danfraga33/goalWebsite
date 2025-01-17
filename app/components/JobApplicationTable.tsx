@@ -42,6 +42,7 @@ const JobApplicationTable = ({
           <TableRow>
             <TableHead>Applied?</TableHead>
             <TableHead>Company</TableHead>
+            <TableHead>Role</TableHead>
             <TableHead>Connection Sent</TableHead>
             <TableHead>Connected</TableHead>
             <TableHead>Website Apply</TableHead>
@@ -59,6 +60,7 @@ const JobApplicationTable = ({
                 <Checkbox checked={row.Applied ?? false} />
               </TableCell>
               <TableCell>{row.Company}</TableCell>
+              <TableCell>{row.Role}</TableCell>
               <TableCell>
                 <Checkbox checked={row.ConnectionSent ?? false} />
               </TableCell>
@@ -100,9 +102,13 @@ const JobApplicationTable = ({
                         <Separator />
                       </DialogHeader>
                       <Form method="PATCH" className="flex flex-col gap-4">
-                        <section className="flex flex-col items-center gap-2">
-                          <Label className="underline">Company Name</Label>
+                        <section className="flex flex-col items-start gap-2">
+                          <Label>Company Name:</Label>
                           <Input name="companyName" required />
+                        </section>
+                        <section className="flex flex-col items-start gap-2">
+                          <Label>Role:</Label>
+                          <Input name="role" />
                         </section>
                         <section className="flex items-center gap-2">
                           <Label>Applied</Label>
@@ -203,41 +209,38 @@ const JobApplicationTable = ({
             <Separator />
           </DialogHeader>
           <Form className="flex flex-col gap-4" method="POST">
-            <section className="flex flex-col items-center gap-2">
-              <Label className="underline">Company Name</Label>
+            <section className="flex flex-col items-start gap-2">
+              <Label>Company Name</Label>
               <Input name="companyName" required />
             </section>
-
+            <section className="flex flex-col items-start gap-2">
+              <Label>Role:</Label>
+              <Input name="role" />
+            </section>
             <section className="flex items-center gap-2">
               <Label>Applied</Label>
               <Checkbox name="applied" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Connection Sent</Label>
               <Checkbox name="connectionSent" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Connected</Label>
               <Checkbox name="connected" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Website Apply</Label>
               <Checkbox name="websiteApply" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Referral</Label>
               <Checkbox name="referral" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Easy Apply</Label>
               <Checkbox name="easyApply" />
             </section>
-
             <section className="flex items-center gap-2">
               <Label>Status</Label>
               <Checkbox name="status" />
@@ -246,7 +249,6 @@ const JobApplicationTable = ({
               <Label>Notes</Label>
               <Input name="notes" />
             </section>
-
             <section className="flex flex-col items-center py-4">
               <Label>When did you apply?</Label>
               <Calendar mode="single" selected={date} onSelect={setDate} />
@@ -258,7 +260,6 @@ const JobApplicationTable = ({
               hidden
               name="date"
             />
-
             <Button type="submit" name="intent" value="job">
               Save
             </Button>
