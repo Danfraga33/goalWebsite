@@ -30,17 +30,35 @@ export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   const formData = await request.formData();
   const intent = formData.get("intent");
+  const companyName = formData.get("companyName") as string;
+  const applied = formData.get("applied") === "on";
+  const connectionSent = formData.get("connectionSent") === "on";
+  const connected = formData.get("connected") === "on";
+  const websiteApply = formData.get("websiteApply") === "on";
+  const referral = formData.get("referral") === "on";
+  const easyApply = formData.get("easyApply") === "on";
+  const status = formData.get("status") === "on";
+  const date = formData.get("date") as string;
+  const notes = formData.get("notes") as string;
+
   if (intent == "job") {
     switch (request.method) {
       case "POST":
         try {
-          const companyName = formData.get("companyName") as string;
-          const date = formData.get("date") as string;
+          console.log("ADDING APPLICATION...");
           const addJobApplication = await db.jobApplication.create({
             data: {
               userId: 1,
               Company: companyName,
+              Applied: applied,
+              ConnectionSent: connectionSent,
+              Connected: connected,
+              WebsiteApply: websiteApply,
+              Referral: referral,
+              EasyApply: easyApply,
+              Status: status,
               Date: date,
+              Notes: notes,
             },
           });
 
@@ -49,7 +67,34 @@ export async function action({ request }: ActionFunctionArgs) {
           console.error("Error Deleting Application", error.message);
           return null;
         }
-        break;
+      case "PATCH":
+        const formId = formData.get("jobApplicationId") as string;
+        console.log("Updating job application...");
+        try {
+          const updateJobApplication = await db.jobApplication.update({
+            where: {
+              id: Number(formId),
+              userId: 1,
+            },
+            data: {
+              Company: companyName,
+              Applied: applied,
+              ConnectionSent: connectionSent,
+              Connected: connected,
+              WebsiteApply: websiteApply,
+              Referral: referral,
+              EasyApply: easyApply,
+              Status: status,
+              Date: date,
+              Notes: notes,
+            },
+          });
+          return { success: true, updateJobApplication };
+        } catch (error) {
+          console.error(error);
+          return { success: false };
+        }
+
       case "DELETE":
         try {
           const jobApplicationId = formData.get("jobApplicationId");
@@ -82,7 +127,6 @@ export async function action({ request }: ActionFunctionArgs) {
         });
 
         return { success: true, addNote };
-        break;
       case "DELETE":
         const id = formData.get("noteId");
         try {

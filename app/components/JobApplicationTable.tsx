@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Calendar } from "./ui/calendar";
-import { Form, useLocation } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { CircleX, File, Plus } from "lucide-react";
 import { JobApplication } from "@prisma/client";
 import { Checkbox } from "./ui/checkbox";
@@ -31,13 +31,8 @@ const JobApplicationTable = ({
 }: {
   jobApplications: JobApplication[];
 }) => {
-  const [applicationChange, setApplicationChange] = useState(false);
+  const [jobApplicationData, setJobApplicationData] = useState();
   const [date, setDate] = useState<Date | undefined>(new Date());
-
-  console.log(jobApplications);
-  const handleCheckboxChange = () => {
-    setApplicationChange((prev) => !prev);
-  };
 
   return (
     <Card className="p-4">
@@ -61,10 +56,7 @@ const JobApplicationTable = ({
           {jobApplications.map((row, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">
-                <Checkbox
-                  checked={row.Applied ?? false}
-                  onChange={() => handleCheckboxChange()}
-                />
+                <Checkbox checked={row.Applied ?? false} />
               </TableCell>
               <TableCell>{row.Company}</TableCell>
               <TableCell>
@@ -85,17 +77,93 @@ const JobApplicationTable = ({
               <TableCell>
                 <Checkbox checked={row.Status ?? false} />
               </TableCell>
-              <TableCell>{row.Date}</TableCell>
+              <TableCell>{new Date(row.Date).toDateString()}</TableCell>
               <TableCell>{row.Notes}</TableCell>
               <TableCell>
                 <section className="flex gap-2">
-                  <Form method="PUT">
-                    {applicationChange && (
-                      <Button variant="outline">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" name="intent" value="job">
                         <File />
+                        <input
+                          type="text"
+                          hidden
+                          readOnly
+                          value={row.id}
+                          name="id"
+                        />
                       </Button>
-                    )}
-                  </Form>
+                    </DialogTrigger>
+                    <DialogContent aria-description="creating a new job application row">
+                      <DialogHeader>
+                        <DialogTitle>Update Job Application</DialogTitle>
+                        <Separator />
+                      </DialogHeader>
+                      <Form method="PATCH" className="flex flex-col gap-4">
+                        <section className="flex flex-col items-center gap-2">
+                          <Label className="underline">Company Name</Label>
+                          <Input name="companyName" required />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Applied</Label>
+                          <Checkbox name="applied" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Connection Sent</Label>
+                          <Checkbox name="connectionSent" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Connected</Label>
+                          <Checkbox name="connected" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Website Apply</Label>
+                          <Checkbox name="websiteApply" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Referral</Label>
+                          <Checkbox name="referral" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Easy Apply</Label>
+                          <Checkbox name="easyApply" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Status</Label>
+                          <Checkbox name="status" />
+                        </section>
+                        <section className="flex items-center gap-2">
+                          <Label>Notes</Label>
+                          <Input name="notes" />
+                        </section>
+                        <section className="flex flex-col items-center py-4">
+                          <Label>When did you apply?</Label>
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={setDate}
+                          />
+                        </section>
+                        <input
+                          type="text"
+                          value={date?.toISOString()}
+                          readOnly
+                          hidden
+                          name="date"
+                        />
+                        <input
+                          type="text"
+                          value={row.id}
+                          hidden
+                          readOnly
+                          name="jobApplicationId"
+                        />
+                        <Button type="submit" name="intent" value="job">
+                          Save
+                        </Button>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
                   <Form method="DELETE">
                     <Button variant="destructive">
                       <CircleX />
@@ -129,30 +197,69 @@ const JobApplicationTable = ({
             Add
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-description="creating a new job application row">
           <DialogHeader>
             <DialogTitle>New Job Application</DialogTitle>
             <Separator />
           </DialogHeader>
-          <Form className="flex flex-col gap-2" method="POST">
-            <section>
-              <section className="flex flex-col items-center gap-2">
-                <Label className="underline">Company Name</Label>
-                <Input name="companyName" />
-              </section>
-              <div className="flex flex-col items-center py-4">
-                <Label>When did you apply ?</Label>
-                <Calendar mode="single" selected={date} onSelect={setDate} />
-              </div>
-              <input
-                type="text"
-                value={date?.toISOString()}
-                readOnly
-                hidden
-                name="date"
-              />
+          <Form className="flex flex-col gap-4" method="POST">
+            <section className="flex flex-col items-center gap-2">
+              <Label className="underline">Company Name</Label>
+              <Input name="companyName" required />
             </section>
-            <Button name="intent" value="job">
+
+            <section className="flex items-center gap-2">
+              <Label>Applied</Label>
+              <Checkbox name="applied" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Connection Sent</Label>
+              <Checkbox name="connectionSent" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Connected</Label>
+              <Checkbox name="connected" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Website Apply</Label>
+              <Checkbox name="websiteApply" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Referral</Label>
+              <Checkbox name="referral" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Easy Apply</Label>
+              <Checkbox name="easyApply" />
+            </section>
+
+            <section className="flex items-center gap-2">
+              <Label>Status</Label>
+              <Checkbox name="status" />
+            </section>
+            <section className="flex items-center gap-2">
+              <Label>Notes</Label>
+              <Input name="notes" />
+            </section>
+
+            <section className="flex flex-col items-center py-4">
+              <Label>When did you apply?</Label>
+              <Calendar mode="single" selected={date} onSelect={setDate} />
+            </section>
+            <input
+              type="text"
+              value={date?.toISOString()}
+              readOnly
+              hidden
+              name="date"
+            />
+
+            <Button type="submit" name="intent" value="job">
               Save
             </Button>
           </Form>
