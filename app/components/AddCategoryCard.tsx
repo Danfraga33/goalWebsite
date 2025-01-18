@@ -13,7 +13,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 
-export function AddCategory() {
+export function AddCategory({ selectedStudy }: { selectedStudy: string }) {
   return (
     <Dialog>
       <DialogTrigger>
@@ -34,7 +34,7 @@ export function AddCategory() {
         </DialogHeader>
         <Form method="POST" className="flex flex-col gap-2">
           <Label htmlFor="title">Title</Label>
-          <Input id="title" name="titlee" />
+          <Input id="title" name="title" />
           <Label htmlFor="description">Description</Label>
           <Textarea id="description" name="description" />
           <Button>Save</Button>
@@ -44,6 +44,13 @@ export function AddCategory() {
             hidden
             readOnly
             name="intent"
+          />
+          <input
+            type="text"
+            value={selectedStudy}
+            hidden
+            readOnly
+            name="selectedStudy"
           />
         </Form>
       </DialogContent>

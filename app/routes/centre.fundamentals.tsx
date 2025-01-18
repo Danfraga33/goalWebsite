@@ -17,6 +17,36 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
+  const intent = formData.get("intent") as string;
+  if (intent === "addCategory") {
+    switch (request.method) {
+      case "POST":
+        try {
+          const title = formData.get("title") as string;
+          const description = formData.get("description") as string;
+          const selectedStudy = formData.get("selectedStudy") as string;
+          const addCategory = await db.subCategory.create({
+            data: {
+              description,
+              title,
+              studyCategory: {
+                create: {
+                  userId: 1,
+                  title: selectedStudy,
+                },
+              },
+            },
+          });
+          return { success: true, addCategory };
+        } catch (error) {
+          console.error(error);
+          return { success: false };
+        }
+      default:
+        break;
+    }
+  }
+
   switch (request.method) {
     case "POST":
       const StudyName = formData.get("StudyName") as string;
@@ -61,7 +91,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const newContent = formData.get("newContent") as string;
       const selectedNoteId = formData.get("noteId");
       const subCategory = getSubCategory(pageCategory);
-      console.log(subCategory); //Fundamentals
+      console.log(subCategory);
 
       console.log("NESTED UPDATING...");
       try {
@@ -116,7 +146,9 @@ export default function Fundamentals() {
             </DashboardCard>
           ))}
 
-          {subCategoryData.length < 6 && <AddCategory />}
+          {subCategoryData.length < 6 && (
+            <AddCategory selectedStudy={selectedStudy} />
+          )}
         </div>
 
         <div className="py-4">

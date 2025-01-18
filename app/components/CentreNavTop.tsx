@@ -9,24 +9,11 @@ import {
 import { Link } from "@remix-run/react";
 import { EllipsisVertical, Home } from "lucide-react";
 import { StudySelector } from "~/components/studySelection";
-import { navItems } from "~/lib/constants/CentreOfCompetencyNav";
-import { Study, StudyCategory } from "@prisma/client";
+import { Study } from "@prisma/client";
 import { Dispatch } from "react";
 import { ModeToggle } from "./mode-toggle";
+import { Category } from "~/lib/types/types";
 
-interface SubCategory {
-  title: string;
-  description: string;
-  id: number;
-  studyCategoryId: number;
-  studyCategoryName: string;
-}
-interface Category {
-  id: number;
-  title: string;
-  userId: number;
-  subCategories: SubCategory[];
-}
 const CentreNavTop = ({
   listOfStudies,
   selectedStudy,
@@ -45,9 +32,7 @@ const CentreNavTop = ({
   const selectedCategory = studyCategory.filter((category) => {
     return category.title === selectedStudy;
   });
-  console.log(selectedCategory);
 
-  const filteredNav = navItems.filter((navItem) => navItem.active === true);
   return (
     <header className="sticky top-0 z-50 w-full gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-center">
