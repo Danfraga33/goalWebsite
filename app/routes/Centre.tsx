@@ -55,6 +55,7 @@ export default function CentreIndex() {
           setSelectedStudy={setSelectedStudy}
           addStudy={addStudy}
           removeStudy={removeStudy}
+          studyCategory={studyCategory}
         />
         <main className="mt-2 flex-1">
           <Outlet context={selectedStudy} />
