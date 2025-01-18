@@ -1,15 +1,9 @@
 import { NoteCategory } from "@prisma/client";
 import { ActionFunctionArgs } from "@remix-run/node";
-import {
-  Form,
-  json,
-  useOutletContext,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { json, useOutletContext, useRouteLoaderData } from "@remix-run/react";
 import { AddCategory } from "~/components/AddCategoryCard";
 import { DashboardCard } from "~/components/DashboardCard";
 import Evernote from "~/components/Evernote";
-import { Button } from "~/components/ui/button";
 import { db } from "~/lib/db/db";
 import {
   getPageCategory,
@@ -49,14 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
           console.error(error);
           return { success: false };
         }
-      case "DELETE":
-        const deletedCategory = await db.studyCategory.delete({
-          where: {
-            id: 5,
-          },
-        });
-        console.log(deletedCategory);
-        return null;
+
       default:
         break;
     }
