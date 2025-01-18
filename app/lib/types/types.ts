@@ -12,6 +12,20 @@ export interface JournalEntry {
   content: string;
 }
 
+interface SubCategory {
+  title: string;
+  description: string;
+  id: number;
+  studyCategoryId: number;
+  studyCategoryName: string;
+}
+export interface Category {
+  id: number;
+  title: string;
+  userId: number;
+  subCategories: SubCategory[];
+}
+
 export interface SavingsAccount {
   id: string;
   name: string;
