@@ -58,7 +58,7 @@ model SubCategory {
   id                Int           @id @default(autoincrement())
   title             String
   description       String
-  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id])
+  studyCategory     StudyCategory @relation("CategorySubCategories", fields: [studyCategoryId], references: [id], onDelete: Cascade)
   studyCategoryId   Int
   studyCategoryName String        @default("new Category")
 }
@@ -75,7 +75,7 @@ model Note {
   StudyName String?      @default("General")
   content   String?
   createdAt DateTime     @default(now())
-  user      User         @relation(fields: [userId], references: [id])
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }
 
