@@ -12,6 +12,7 @@ import { StudySelector } from "~/components/studySelection";
 import { navItems } from "~/lib/constants/CentreOfCompetencyNav";
 import { Study } from "@prisma/client";
 import { Dispatch } from "react";
+import { ModeToggle } from "./mode-toggle";
 const CentreNavTop = ({
   listOfStudies,
   selectedStudy,
@@ -71,13 +72,16 @@ const CentreNavTop = ({
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-        <StudySelector
-          studies={listOfStudies}
-          selectedStudy={selectedStudy}
-          onSelectStudy={setSelectedStudy}
-          onAddStudy={addStudy}
-          onRemoveStudy={removeStudy}
-        />
+        <section className="flex gap-4">
+          <StudySelector
+            studies={listOfStudies}
+            selectedStudy={selectedStudy}
+            onSelectStudy={setSelectedStudy}
+            onAddStudy={addStudy}
+            onRemoveStudy={removeStudy}
+          />
+          <ModeToggle />
+        </section>
       </div>
     </header>
   );
