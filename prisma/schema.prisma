@@ -73,6 +73,7 @@ model Note {
   title     String
   category  NoteCategory
   StudyName String?      @default("General")
+  section String? @default("General")
   content   String?
   createdAt DateTime     @default(now())
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
