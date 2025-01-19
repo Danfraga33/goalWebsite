@@ -89,7 +89,7 @@ export async function action({ request }: ActionFunctionArgs) {
         break;
       case "DELETE":
         const id = formData.get("noteId");
-        console.log("deleting...");
+        console.log("Deleting...");
         try {
           const deleteNote = await db.note.delete({
             where: {
