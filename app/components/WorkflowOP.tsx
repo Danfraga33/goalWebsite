@@ -1,11 +1,9 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import ReactFlow, {
   Background,
   Connection,
   Controls,
   Edge,
-  MiniMap,
-  Node,
   addEdge,
   useNodesState,
 } from "reactflow";
