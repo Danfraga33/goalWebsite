@@ -41,7 +41,7 @@ const Evernote = ({
   const parentCategory = getParentPath(pageCategory);
   return (
     <Card className="flex h-full overflow-hidden">
-      <div className="w-1/3 border-r border-gray-200 p-4">
+      <div className="w-1/3 border-r border-gray-200 bg-stone-50 p-4">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">Notes</h3>
@@ -60,13 +60,13 @@ const Evernote = ({
             <Input
               type="text"
               placeholder="Search notes..."
-              className="pl-8"
+              className="pl-8 shadow-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
-        <ScrollArea className="h-[80%] space-y-2 rounded-md border">
+        <ScrollArea className="h-[80%] space-y-2 rounded-md border shadow-md">
           {filteredNotes.length > 0 ? (
             filteredNotes.map((note) => (
               <div
@@ -122,7 +122,7 @@ const Evernote = ({
                 <Input
                   value={selectedNote.title || ""}
                   onChange={(e) => handleNoteChange("title", e.target.value)}
-                  className="mb-4 text-xl font-bold"
+                  className="mb-4 text-xl font-bold shadow-md"
                   name="newTitle"
                 />
                 <Button color="default">
@@ -133,7 +133,7 @@ const Evernote = ({
               <Textarea
                 value={selectedNote.content ?? "Enter Text..."}
                 onChange={(e) => handleNoteChange("content", e.target.value)}
-                className="h-full min-h-[400px] resize-none"
+                className="h-full min-h-[600px] resize-none shadow-sm"
                 placeholder="Start typing your note here..."
                 name="newContent"
               />
