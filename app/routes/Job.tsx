@@ -1,4 +1,3 @@
-import Evernote from "~/components/Evernote";
 import PageTitle from "~/components/PageTitle";
 import Sidebar from "~/components/sidebar";
 import { getPageCategory } from "~/utils/pageUtils";
@@ -7,9 +6,7 @@ import { NoteCategory } from "@prisma/client";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import JobApplicationTable from "~/components/JobApplicationTable";
-import { Textarea } from "~/components/ui/textarea";
-import { ReferralMsg } from "~/lib/constants/Referral";
-import { Label } from "~/components/ui/label";
+import Referral from "~/components/ReferralMsg";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
@@ -183,15 +180,14 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 const Job = () => {
-  const { jobApplications, notes } = useLoaderData<typeof loader>();
+  const { jobApplications } = useLoaderData<typeof loader>();
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <PageTitle>Job Table</PageTitle>
         <JobApplicationTable jobApplications={jobApplications} />
-        <Label htmlFor="referralMsg">Text Referral Msg</Label>
-        <Textarea id="referralMsg" className="h-5" value={ReferralMsg} />
-        <Evernote notesData={notes} />
+        <Referral />
+        {/* <Evernote notesData={notes} /> */}
       </div>
     </Sidebar>
   );
