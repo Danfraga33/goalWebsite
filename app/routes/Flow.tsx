@@ -96,7 +96,7 @@ const Flow = () => {
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <PageTitle>My Goals</PageTitle>
+          <PageTitle>Flow</PageTitle>
           {/* <Button onClick={addCategory}>
             <Plus className="mr-2 h-4 w-4" />
             Add Category
