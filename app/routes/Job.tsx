@@ -16,6 +16,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
 
+  const referralMsg = await db.user.findFirst({
+    select: {
+      ReferralMsg: true,
+    },
+  });
+
   const jobApplications = await db.jobApplication.findMany({
     where: {
       userId: 1,
@@ -23,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   if (!notes) throw new Response("Not Found", { status: 404 });
-  return json({ jobApplications, notes });
+  return json({ jobApplications, notes, referralMsg });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -119,6 +125,23 @@ export async function action({ request }: ActionFunctionArgs) {
       default:
         break;
     }
+  } else if (intent === "referral") {
+    const ReferralMsg = formData.get("referralMsg") as string;
+    try {
+      const updateReferralMsg = await db.user.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          ReferralMsg,
+        },
+      });
+
+      return { success: true, updateReferralMsg };
+    } catch (error) {
+      console.error("Error Deleting Application", error.message);
+      return null;
+    }
   } else {
     switch (request.method) {
       case "POST":
@@ -180,13 +203,13 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 const Job = () => {
-  const { jobApplications } = useLoaderData<typeof loader>();
+  const { jobApplications, referralMsg } = useLoaderData<typeof loader>();
   return (
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <PageTitle>Job Table</PageTitle>
         <JobApplicationTable jobApplications={jobApplications} />
-        <Referral />
+        <Referral referralMsg={referralMsg} />
         {/* <Evernote notesData={notes} /> */}
       </div>
     </Sidebar>
