@@ -66,8 +66,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
           return { success: true, addJobApplication };
         } catch (error) {
-          console.error("Error Deleting Application", error.message);
-          return null;
+          return json(
+            { error: "Unsuccessfull attempt to delete the note" },
+            { statusText: error.message },
+          );
         }
       case "PATCH":
         const formId = formData.get("jobApplicationId") as string;

@@ -25,16 +25,21 @@ export async function action({ request }: ActionFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
   switch (request.method) {
     case "POST":
-      const addNote = await db.note.create({
-        data: {
-          userId: 1,
-          category: pageCategory as NoteCategory,
-          title: formData.get("title") as string,
-          content: formData.get("content") as string,
-        },
-      });
+      try {
+        const addNote = await db.note.create({
+          data: {
+            userId: 1,
+            category: pageCategory as NoteCategory,
+            title: formData.get("title") as string,
+            content: formData.get("content") as string,
+          },
+        });
 
-      return { success: true, addNote };
+        return { success: true, addNote };
+      } catch (error) {
+        console.error("Error Deleting Application", error.message);
+        return null;
+      }
     case "DELETE":
       const id = formData.get("noteId");
       console.log("deleting...");
@@ -52,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
       } catch (error) {
         return json(
           { error: "Unsuccessfull attempt to delete the note" },
-          { status: 404 },
+          { statusText: error.message },
         );
       }
     case "PATCH":
