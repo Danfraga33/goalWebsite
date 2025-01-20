@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useCallback, useMemo, ChangeEvent, FC } from "react";
 import ReactFlow, {
   Position,

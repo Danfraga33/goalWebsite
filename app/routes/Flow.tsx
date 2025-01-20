@@ -8,6 +8,8 @@ import { db } from "~/lib/db/db";
 import { getPageCategory } from "~/utils/pageUtils";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Category } from "~/lib/types/types";
+import WorkflowOP from "~/components/WorkflowOP";
+import WorkflowChart from "~/components/Workflow";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const pageCategory = getPageCategory(request.url);
@@ -96,7 +98,7 @@ const Flow = () => {
     <Sidebar>
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <PageTitle>Flow</PageTitle>
+          <PageTitle>My Goals</PageTitle>
           {/* <Button onClick={addCategory}>
             <Plus className="mr-2 h-4 w-4" />
             Add Category
@@ -113,6 +115,8 @@ const Flow = () => {
             />
           ))}
         </div> */}
+        <WorkflowOP />
+        {/* <WorkflowChart /> */}
         <Evernote notesData={notes} />
       </div>
     </Sidebar>
