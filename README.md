@@ -8,7 +8,7 @@ to do
 Plan
 
 - Websites (Whats each for)
-  - Danielfraga.net (Wix) ==> What I am learning in investments (eg. Com petitive Strategy Blog)
+  - Danielfraga.net (Wix) ==> What I am learning in investments (eg. Com petitive Strategy Blog) // OPTIONAL -- TO MUCH TIME WASTING
   - Tech Investment Blog (Personal Hosted) => My TECH Investments
   - Danielfraga.dev (Portfolio) ==> Tech Projects I am working on
   - No need to share notes. Learnings about topics like transitiors, and supervised learning set as personal. Share later.
